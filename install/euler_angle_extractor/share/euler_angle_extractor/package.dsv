@@ -1,0 +1,6 @@
+source;share/euler_angle_extractor/hook/pythonpath.ps1
+source;share/euler_angle_extractor/hook/pythonpath.dsv
+source;share/euler_angle_extractor/hook/pythonpath.sh
+source;share/euler_angle_extractor/hook/ament_prefix_path.ps1
+source;share/euler_angle_extractor/hook/ament_prefix_path.dsv
+source;share/euler_angle_extractor/hook/ament_prefix_path.sh

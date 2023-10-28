@@ -1,0 +1,16 @@
+package.xml
+setup.cfg
+setup.py
+../../../build/euler_angle_extractor/euler_angle_extractor.egg-info/PKG-INFO
+../../../build/euler_angle_extractor/euler_angle_extractor.egg-info/SOURCES.txt
+../../../build/euler_angle_extractor/euler_angle_extractor.egg-info/dependency_links.txt
+../../../build/euler_angle_extractor/euler_angle_extractor.egg-info/entry_points.txt
+../../../build/euler_angle_extractor/euler_angle_extractor.egg-info/requires.txt
+../../../build/euler_angle_extractor/euler_angle_extractor.egg-info/top_level.txt
+../../../build/euler_angle_extractor/euler_angle_extractor.egg-info/zip-safe
+euler_angle_extractor/__init__.py
+euler_angle_extractor/euler_angle_extractor.py
+resource/euler_angle_extractor
+test/test_copyright.py
+test/test_flake8.py
+test/test_pep257.py

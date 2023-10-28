@@ -57,6 +57,7 @@ class Bno055Node(Node):
 
     def setup(self):
         # Initialize ROS2 Node Parameters:
+
         self.param = NodeParameters(self)
 
         # Get connector according to configured sensor connection type:

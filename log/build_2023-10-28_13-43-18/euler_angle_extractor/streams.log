@@ -1,0 +1,21 @@
+[1.022s] Invoking command in '/home/keenan/Documents/rice_device/ros2_ws/src/euler_angle_extractor': PYTHONPATH=/home/keenan/Documents/rice_device/build/euler_angle_extractor/prefix_override:/home/keenan/Documents/rice_device/install/euler_angle_extractor/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/euler_angle_extractor build --build-base /home/keenan/Documents/rice_device/build/euler_angle_extractor/build install --record /home/keenan/Documents/rice_device/build/euler_angle_extractor/install.log --single-version-externally-managed
+[1.247s] running egg_info
+[1.248s] writing ../../../build/euler_angle_extractor/euler_angle_extractor.egg-info/PKG-INFO
+[1.248s] writing dependency_links to ../../../build/euler_angle_extractor/euler_angle_extractor.egg-info/dependency_links.txt
+[1.248s] writing entry points to ../../../build/euler_angle_extractor/euler_angle_extractor.egg-info/entry_points.txt
+[1.249s] writing requirements to ../../../build/euler_angle_extractor/euler_angle_extractor.egg-info/requires.txt
+[1.249s] writing top-level names to ../../../build/euler_angle_extractor/euler_angle_extractor.egg-info/top_level.txt
+[1.251s] reading manifest file '../../../build/euler_angle_extractor/euler_angle_extractor.egg-info/SOURCES.txt'
+[1.251s] writing manifest file '../../../build/euler_angle_extractor/euler_angle_extractor.egg-info/SOURCES.txt'
+[1.251s] running build
+[1.251s] running build_py
+[1.252s] running install
+[1.252s] running install_lib
+[1.254s] running install_data
+[1.254s] running install_egg_info
+[1.256s] removing '/home/keenan/Documents/rice_device/install/euler_angle_extractor/lib/python3.10/site-packages/euler_angle_extractor-0.0.0-py3.10.egg-info' (and everything under it)
+[1.257s] Copying ../../../build/euler_angle_extractor/euler_angle_extractor.egg-info to /home/keenan/Documents/rice_device/install/euler_angle_extractor/lib/python3.10/site-packages/euler_angle_extractor-0.0.0-py3.10.egg-info
+[1.258s] running install_scripts
+[1.279s] Installing euler_angle_extractor script to /home/keenan/Documents/rice_device/install/euler_angle_extractor/lib/euler_angle_extractor
+[1.279s] writing list of installed files to '/home/keenan/Documents/rice_device/build/euler_angle_extractor/install.log'
+[1.305s] Invoked command in '/home/keenan/Documents/rice_device/ros2_ws/src/euler_angle_extractor' returned '0': PYTHONPATH=/home/keenan/Documents/rice_device/build/euler_angle_extractor/prefix_override:/home/keenan/Documents/rice_device/install/euler_angle_extractor/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base ../../../build/euler_angle_extractor build --build-base /home/keenan/Documents/rice_device/build/euler_angle_extractor/build install --record /home/keenan/Documents/rice_device/build/euler_angle_extractor/install.log --single-version-externally-managed
