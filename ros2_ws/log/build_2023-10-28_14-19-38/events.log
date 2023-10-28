@@ -1,0 +1,151 @@
+[0.000000] (-) TimerEvent: {}
+[0.000181] (bno055) JobQueued: {'identifier': 'bno055', 'dependencies': OrderedDict()}
+[0.000214] (euler_angle_extractor) JobQueued: {'identifier': 'euler_angle_extractor', 'dependencies': OrderedDict()}
+[0.000234] (bno055) JobStarted: {'identifier': 'bno055'}
+[0.074841] (euler_angle_extractor) JobStarted: {'identifier': 'euler_angle_extractor'}
+[0.099093] (-) TimerEvent: {}
+[0.199412] (-) TimerEvent: {}
+[0.299737] (-) TimerEvent: {}
+[0.400141] (-) TimerEvent: {}
+[0.501149] (-) TimerEvent: {}
+[0.601461] (-) TimerEvent: {}
+[0.701754] (-) TimerEvent: {}
+[0.803300] (-) TimerEvent: {}
+[0.907429] (-) TimerEvent: {}
+[1.007966] (-) TimerEvent: {}
+[1.108704] (-) TimerEvent: {}
+[1.209162] (-) TimerEvent: {}
+[1.309518] (-) TimerEvent: {}
+[1.410259] (-) TimerEvent: {}
+[1.451046] (euler_angle_extractor) Command: {'cmd': ['/usr/bin/python3', 'setup.py', 'egg_info', '--egg-base', '../../build/euler_angle_extractor', 'build', '--build-base', '/home/keenan/Documents/rice_device/ros2_ws/build/euler_angle_extractor/build', 'install', '--record', '/home/keenan/Documents/rice_device/ros2_ws/build/euler_angle_extractor/install.log', '--single-version-externally-managed'], 'cwd': '/home/keenan/Documents/rice_device/ros2_ws/src/euler_angle_extractor', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'PYTHONWARNINGS': 'ignore:setup.py install is deprecated::setuptools.command.install', 'USER': 'keenan', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/home/keenan', 'OLDPWD': '/home/keenan/Documents/rice_device', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'SYSTEMD_EXEC_PID': '10233', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'ROS_DISTRO': 'humble', 'LOGNAME': 'keenan', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'keenan', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'ROS_LOCALHOST_ONLY': '1', 'PATH': "/opt/ros/humble/bin:/home/keenan/.local/bin':/home/keenan/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin", 'SESSION_MANAGER': 'local/keenan-XPS-13-9360:@/tmp/.ICE-unix/1649,unix/keenan-XPS-13-9360:/tmp/.ICE-unix/1649', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/7544e347_a06b_4c0d_b7b6_cb03cc957f9a', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.HY8HD2', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'GNOME_TERMINAL_SERVICE': ':1.195', 'SSH_AGENT_LAUNCHER': 'gnome-keyring', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'ROS_DOMAIN_ID': '0', 'AMENT_PREFIX_PATH': '/opt/ros/humble', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/keenan/Documents/rice_device/ros2_ws/build/euler_angle_extractor', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/keenan/Documents/rice_device/ros2_ws/build/euler_angle_extractor/prefix_override:/home/keenan/Documents/rice_device/ros2_ws/install/euler_angle_extractor/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1', 'VTE_VERSION': '6800'}, 'shell': False}
+[1.465631] (bno055) Command: {'cmd': ['/usr/bin/python3', 'setup.py', 'egg_info', '--egg-base', '../../build/bno055', 'build', '--build-base', '/home/keenan/Documents/rice_device/ros2_ws/build/bno055/build', 'install', '--record', '/home/keenan/Documents/rice_device/ros2_ws/build/bno055/install.log', '--single-version-externally-managed'], 'cwd': '/home/keenan/Documents/rice_device/ros2_ws/src/bno055-0.3.0', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'PYTHONWARNINGS': 'ignore:setup.py install is deprecated::setuptools.command.install', 'USER': 'keenan', 'XDG_SESSION_TYPE': 'wayland', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/home/keenan', 'OLDPWD': '/home/keenan/Documents/rice_device', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'SYSTEMD_EXEC_PID': '10233', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', 'IM_CONFIG_PHASE': '1', 'WAYLAND_DISPLAY': 'wayland-0', 'ROS_DISTRO': 'humble', 'LOGNAME': 'keenan', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'keenan', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'ROS_LOCALHOST_ONLY': '1', 'PATH': "/opt/ros/humble/bin:/home/keenan/.local/bin':/home/keenan/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin", 'SESSION_MANAGER': 'local/keenan-XPS-13-9360:@/tmp/.ICE-unix/1649,unix/keenan-XPS-13-9360:/tmp/.ICE-unix/1649', 'XDG_MENU_PREFIX': 'gnome-', 'GNOME_TERMINAL_SCREEN': '/org/gnome/Terminal/screen/7544e347_a06b_4c0d_b7b6_cb03cc957f9a', 'GNOME_SETUP_DISPLAY': ':1', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':0', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/.mutter-Xwaylandauth.HY8HD2', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'GNOME_TERMINAL_SERVICE': ':1.195', 'SSH_AGENT_LAUNCHER': 'gnome-keyring', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'ROS_DOMAIN_ID': '0', 'AMENT_PREFIX_PATH': '/opt/ros/humble', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/keenan/Documents/rice_device/ros2_ws/build/bno055', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/keenan/Documents/rice_device/ros2_ws/build/bno055/prefix_override:/home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1', 'VTE_VERSION': '6800'}, 'shell': False}
+[1.510389] (-) TimerEvent: {}
+[1.610729] (-) TimerEvent: {}
+[1.711147] (-) TimerEvent: {}
+[1.811568] (-) TimerEvent: {}
+[1.863933] (euler_angle_extractor) StdoutLine: {'line': b'running egg_info\n'}
+[1.865678] (euler_angle_extractor) StdoutLine: {'line': b'creating ../../build/euler_angle_extractor/euler_angle_extractor.egg-info\n'}
+[1.866067] (euler_angle_extractor) StdoutLine: {'line': b'writing ../../build/euler_angle_extractor/euler_angle_extractor.egg-info/PKG-INFO\n'}
+[1.866196] (euler_angle_extractor) StdoutLine: {'line': b'writing dependency_links to ../../build/euler_angle_extractor/euler_angle_extractor.egg-info/dependency_links.txt\n'}
+[1.868418] (euler_angle_extractor) StdoutLine: {'line': b'writing entry points to ../../build/euler_angle_extractor/euler_angle_extractor.egg-info/entry_points.txt\n'}
+[1.868688] (euler_angle_extractor) StdoutLine: {'line': b'writing requirements to ../../build/euler_angle_extractor/euler_angle_extractor.egg-info/requires.txt\n'}
+[1.868847] (euler_angle_extractor) StdoutLine: {'line': b'writing top-level names to ../../build/euler_angle_extractor/euler_angle_extractor.egg-info/top_level.txt\n'}
+[1.868976] (euler_angle_extractor) StdoutLine: {'line': b"writing manifest file '../../build/euler_angle_extractor/euler_angle_extractor.egg-info/SOURCES.txt'\n"}
+[1.870807] (euler_angle_extractor) StdoutLine: {'line': b"reading manifest file '../../build/euler_angle_extractor/euler_angle_extractor.egg-info/SOURCES.txt'\n"}
+[1.871883] (euler_angle_extractor) StdoutLine: {'line': b"writing manifest file '../../build/euler_angle_extractor/euler_angle_extractor.egg-info/SOURCES.txt'\n"}
+[1.872145] (euler_angle_extractor) StdoutLine: {'line': b'running build\n'}
+[1.872287] (euler_angle_extractor) StdoutLine: {'line': b'running build_py\n'}
+[1.872733] (euler_angle_extractor) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/build/euler_angle_extractor/build\n'}
+[1.872868] (euler_angle_extractor) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/build/euler_angle_extractor/build/lib\n'}
+[1.873131] (euler_angle_extractor) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/build/euler_angle_extractor/build/lib/euler_angle_extractor\n'}
+[1.873246] (euler_angle_extractor) StdoutLine: {'line': b'copying euler_angle_extractor/__init__.py -> /home/keenan/Documents/rice_device/ros2_ws/build/euler_angle_extractor/build/lib/euler_angle_extractor\n'}
+[1.873354] (euler_angle_extractor) StdoutLine: {'line': b'copying euler_angle_extractor/euler_angle_extractor.py -> /home/keenan/Documents/rice_device/ros2_ws/build/euler_angle_extractor/build/lib/euler_angle_extractor\n'}
+[1.875421] (euler_angle_extractor) StdoutLine: {'line': b'running install\n'}
+[1.875575] (euler_angle_extractor) StdoutLine: {'line': b'running install_lib\n'}
+[1.875692] (euler_angle_extractor) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/install/euler_angle_extractor/lib/python3.10/site-packages/euler_angle_extractor\n'}
+[1.875806] (euler_angle_extractor) StdoutLine: {'line': b'copying /home/keenan/Documents/rice_device/ros2_ws/build/euler_angle_extractor/build/lib/euler_angle_extractor/__init__.py -> /home/keenan/Documents/rice_device/ros2_ws/install/euler_angle_extractor/lib/python3.10/site-packages/euler_angle_extractor\n'}
+[1.875911] (euler_angle_extractor) StdoutLine: {'line': b'copying /home/keenan/Documents/rice_device/ros2_ws/build/euler_angle_extractor/build/lib/euler_angle_extractor/euler_angle_extractor.py -> /home/keenan/Documents/rice_device/ros2_ws/install/euler_angle_extractor/lib/python3.10/site-packages/euler_angle_extractor\n'}
+[1.876987] (euler_angle_extractor) StdoutLine: {'line': b'byte-compiling /home/keenan/Documents/rice_device/ros2_ws/install/euler_angle_extractor/lib/python3.10/site-packages/euler_angle_extractor/__init__.py to __init__.cpython-310.pyc\n'}
+[1.877463] (euler_angle_extractor) StdoutLine: {'line': b'byte-compiling /home/keenan/Documents/rice_device/ros2_ws/install/euler_angle_extractor/lib/python3.10/site-packages/euler_angle_extractor/euler_angle_extractor.py to euler_angle_extractor.cpython-310.pyc\n'}
+[1.881051] (euler_angle_extractor) StdoutLine: {'line': b'running install_data\n'}
+[1.881257] (euler_angle_extractor) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/install/euler_angle_extractor/share/ament_index\n'}
+[1.881371] (euler_angle_extractor) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/install/euler_angle_extractor/share/ament_index/resource_index\n'}
+[1.881470] (euler_angle_extractor) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/install/euler_angle_extractor/share/ament_index/resource_index/packages\n'}
+[1.881578] (euler_angle_extractor) StdoutLine: {'line': b'copying resource/euler_angle_extractor -> /home/keenan/Documents/rice_device/ros2_ws/install/euler_angle_extractor/share/ament_index/resource_index/packages\n'}
+[1.881674] (euler_angle_extractor) StdoutLine: {'line': b'copying package.xml -> /home/keenan/Documents/rice_device/ros2_ws/install/euler_angle_extractor/share/euler_angle_extractor\n'}
+[1.881802] (euler_angle_extractor) StdoutLine: {'line': b'running install_egg_info\n'}
+[1.884783] (euler_angle_extractor) StdoutLine: {'line': b'Copying ../../build/euler_angle_extractor/euler_angle_extractor.egg-info to /home/keenan/Documents/rice_device/ros2_ws/install/euler_angle_extractor/lib/python3.10/site-packages/euler_angle_extractor-0.0.0-py3.10.egg-info\n'}
+[1.888186] (euler_angle_extractor) StdoutLine: {'line': b'running install_scripts\n'}
+[1.911780] (-) TimerEvent: {}
+[1.924327] (euler_angle_extractor) StdoutLine: {'line': b'Installing euler_angle_extractor script to /home/keenan/Documents/rice_device/ros2_ws/install/euler_angle_extractor/lib/euler_angle_extractor\n'}
+[1.925600] (euler_angle_extractor) StdoutLine: {'line': b"writing list of installed files to '/home/keenan/Documents/rice_device/ros2_ws/build/euler_angle_extractor/install.log'\n"}
+[1.925906] (bno055) StdoutLine: {'line': b'running egg_info\n'}
+[1.926720] (bno055) StdoutLine: {'line': b'creating ../../build/bno055/bno055.egg-info\n'}
+[1.926989] (bno055) StdoutLine: {'line': b'writing ../../build/bno055/bno055.egg-info/PKG-INFO\n'}
+[1.927278] (bno055) StdoutLine: {'line': b'writing dependency_links to ../../build/bno055/bno055.egg-info/dependency_links.txt\n'}
+[1.927448] (bno055) StdoutLine: {'line': b'writing entry points to ../../build/bno055/bno055.egg-info/entry_points.txt\n'}
+[1.927624] (bno055) StdoutLine: {'line': b'writing requirements to ../../build/bno055/bno055.egg-info/requires.txt\n'}
+[1.927769] (bno055) StdoutLine: {'line': b'writing top-level names to ../../build/bno055/bno055.egg-info/top_level.txt\n'}
+[1.927989] (bno055) StdoutLine: {'line': b"writing manifest file '../../build/bno055/bno055.egg-info/SOURCES.txt'\n"}
+[1.930807] (bno055) StdoutLine: {'line': b"reading manifest file '../../build/bno055/bno055.egg-info/SOURCES.txt'\n"}
+[1.931101] (bno055) StdoutLine: {'line': b"adding license file 'LICENSE'\n"}
+[1.931216] (bno055) StdoutLine: {'line': b"adding license file 'AUTHORS'\n"}
+[1.932061] (bno055) StdoutLine: {'line': b"writing manifest file '../../build/bno055/bno055.egg-info/SOURCES.txt'\n"}
+[1.932326] (bno055) StdoutLine: {'line': b'running build\n'}
+[1.932504] (bno055) StdoutLine: {'line': b'running build_py\n'}
+[1.932653] (bno055) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build\n'}
+[1.932854] (bno055) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib\n'}
+[1.932971] (bno055) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055\n'}
+[1.933088] (bno055) StdoutLine: {'line': b'copying bno055/__init__.py -> /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055\n'}
+[1.933238] (bno055) StdoutLine: {'line': b'copying bno055/bno055.py -> /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055\n'}
+[1.933383] (bno055) StdoutLine: {'line': b'copying bno055/registers.py -> /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055\n'}
+[1.934284] (bno055) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/sensor\n'}
+[1.934477] (bno055) StdoutLine: {'line': b'copying bno055/sensor/__init__.py -> /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/sensor\n'}
+[1.934615] (bno055) StdoutLine: {'line': b'copying bno055/sensor/SensorService.py -> /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/sensor\n'}
+[1.935347] (bno055) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/params\n'}
+[1.935515] (bno055) StdoutLine: {'line': b'copying bno055/params/__init__.py -> /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/params\n'}
+[1.935674] (bno055) StdoutLine: {'line': b'copying bno055/params/NodeParameters.py -> /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/params\n'}
+[1.935820] (bno055) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/error_handling\n'}
+[1.936047] (bno055) StdoutLine: {'line': b'copying bno055/error_handling/__init__.py -> /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/error_handling\n'}
+[1.936195] (bno055) StdoutLine: {'line': b'copying bno055/error_handling/exceptions.py -> /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/error_handling\n'}
+[1.936386] (bno055) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/connectors\n'}
+[1.936668] (bno055) StdoutLine: {'line': b'copying bno055/connectors/uart.py -> /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/connectors\n'}
+[1.936845] (bno055) StdoutLine: {'line': b'copying bno055/connectors/__init__.py -> /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/connectors\n'}
+[1.936963] (bno055) StdoutLine: {'line': b'copying bno055/connectors/Connector.py -> /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/connectors\n'}
+[1.937091] (bno055) StdoutLine: {'line': b'copying bno055/connectors/i2c.py -> /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/connectors\n'}
+[1.937234] (bno055) StdoutLine: {'line': b'running install\n'}
+[1.942964] (bno055) StdoutLine: {'line': b'running install_lib\n'}
+[1.943200] (bno055) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055\n'}
+[1.943370] (bno055) StdoutLine: {'line': b'copying /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/__init__.py -> /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055\n'}
+[1.945853] (bno055) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/sensor\n'}
+[1.946011] (bno055) StdoutLine: {'line': b'copying /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/sensor/__init__.py -> /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/sensor\n'}
+[1.946181] (bno055) StdoutLine: {'line': b'copying /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/sensor/SensorService.py -> /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/sensor\n'}
+[1.946301] (bno055) StdoutLine: {'line': b'copying /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/bno055.py -> /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055\n'}
+[1.946588] (bno055) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/params\n'}
+[1.946723] (bno055) StdoutLine: {'line': b'copying /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/params/__init__.py -> /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/params\n'}
+[1.947140] (bno055) StdoutLine: {'line': b'copying /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/params/NodeParameters.py -> /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/params\n'}
+[1.947257] (bno055) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/error_handling\n'}
+[1.947363] (bno055) StdoutLine: {'line': b'copying /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/error_handling/__init__.py -> /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/error_handling\n'}
+[1.947476] (bno055) StdoutLine: {'line': b'copying /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/error_handling/exceptions.py -> /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/error_handling\n'}
+[1.947594] (bno055) StdoutLine: {'line': b'copying /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/registers.py -> /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055\n'}
+[1.947694] (bno055) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/connectors\n'}
+[1.947801] (bno055) StdoutLine: {'line': b'copying /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/connectors/uart.py -> /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/connectors\n'}
+[1.947903] (bno055) StdoutLine: {'line': b'copying /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/connectors/__init__.py -> /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/connectors\n'}
+[1.950595] (bno055) StdoutLine: {'line': b'copying /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/connectors/Connector.py -> /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/connectors\n'}
+[1.950778] (bno055) StdoutLine: {'line': b'copying /home/keenan/Documents/rice_device/ros2_ws/build/bno055/build/lib/bno055/connectors/i2c.py -> /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/connectors\n'}
+[1.950965] (bno055) StdoutLine: {'line': b'byte-compiling /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/__init__.py to __init__.cpython-310.pyc\n'}
+[1.951083] (bno055) StdoutLine: {'line': b'byte-compiling /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/sensor/__init__.py to __init__.cpython-310.pyc\n'}
+[1.951185] (bno055) StdoutLine: {'line': b'byte-compiling /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/sensor/SensorService.py to SensorService.cpython-310.pyc\n'}
+[1.951291] (bno055) StdoutLine: {'line': b'byte-compiling /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/bno055.py to bno055.cpython-310.pyc\n'}
+[1.951655] (bno055) StdoutLine: {'line': b'byte-compiling /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/params/__init__.py to __init__.cpython-310.pyc\n'}
+[1.951926] (bno055) StdoutLine: {'line': b'byte-compiling /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/params/NodeParameters.py to NodeParameters.cpython-310.pyc\n'}
+[1.952979] (bno055) StdoutLine: {'line': b'byte-compiling /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/error_handling/__init__.py to __init__.cpython-310.pyc\n'}
+[1.953240] (bno055) StdoutLine: {'line': b'byte-compiling /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/error_handling/exceptions.py to exceptions.cpython-310.pyc\n'}
+[1.954695] (bno055) StdoutLine: {'line': b'byte-compiling /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/registers.py to registers.cpython-310.pyc\n'}
+[1.954894] (bno055) StdoutLine: {'line': b'byte-compiling /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/connectors/uart.py to uart.cpython-310.pyc\n'}
+[1.955440] (bno055) StdoutLine: {'line': b'byte-compiling /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/connectors/__init__.py to __init__.cpython-310.pyc\n'}
+[1.955702] (bno055) StdoutLine: {'line': b'byte-compiling /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/connectors/Connector.py to Connector.cpython-310.pyc\n'}
+[1.956718] (bno055) StdoutLine: {'line': b'byte-compiling /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055/connectors/i2c.py to i2c.cpython-310.pyc\n'}
+[1.957219] (bno055) StdoutLine: {'line': b'running install_data\n'}
+[1.958176] (bno055) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/install/bno055/share/ament_index\n'}
+[1.958476] (bno055) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/install/bno055/share/ament_index/resource_index\n'}
+[1.958702] (bno055) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/install/bno055/share/ament_index/resource_index/packages\n'}
+[1.958947] (bno055) StdoutLine: {'line': b'copying resource/bno055 -> /home/keenan/Documents/rice_device/ros2_ws/install/bno055/share/ament_index/resource_index/packages\n'}
+[1.959211] (bno055) StdoutLine: {'line': b'copying package.xml -> /home/keenan/Documents/rice_device/ros2_ws/install/bno055/share/bno055\n'}
+[1.959378] (bno055) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/install/bno055/share/bno055/launch\n'}
+[1.959483] (bno055) StdoutLine: {'line': b'copying launch/bno055.launch.py -> /home/keenan/Documents/rice_device/ros2_ws/install/bno055/share/bno055/launch\n'}
+[1.959590] (bno055) StdoutLine: {'line': b'creating /home/keenan/Documents/rice_device/ros2_ws/install/bno055/share/bno055/config\n'}
+[1.959694] (bno055) StdoutLine: {'line': b'copying bno055/params/bno055_params.yaml -> /home/keenan/Documents/rice_device/ros2_ws/install/bno055/share/bno055/config\n'}
+[1.959804] (bno055) StdoutLine: {'line': b'running install_egg_info\n'}
+[1.961847] (bno055) StdoutLine: {'line': b'Copying ../../build/bno055/bno055.egg-info to /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/python3.10/site-packages/bno055-0.3.0-py3.10.egg-info\n'}
+[1.963064] (bno055) StdoutLine: {'line': b'running install_scripts\n'}
+[1.991659] (euler_angle_extractor) CommandEnded: {'returncode': 0}
+[1.997008] (bno055) StdoutLine: {'line': b'Installing bno055 script to /home/keenan/Documents/rice_device/ros2_ws/install/bno055/lib/bno055\n'}
+[1.998055] (bno055) StdoutLine: {'line': b"writing list of installed files to '/home/keenan/Documents/rice_device/ros2_ws/build/bno055/install.log'\n"}
+[2.011911] (-) TimerEvent: {}
+[2.112465] (-) TimerEvent: {}
+[2.112911] (euler_angle_extractor) JobEnded: {'identifier': 'euler_angle_extractor', 'rc': 0}
+[2.114003] (bno055) CommandEnded: {'returncode': 0}
+[2.212598] (-) TimerEvent: {}
+[2.214899] (bno055) JobEnded: {'identifier': 'bno055', 'rc': 0}
+[2.216025] (-) EventReactorShutdown: {}
