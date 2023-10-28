@@ -1,0 +1,1 @@
+DRIVERS=="usb", ATTRS{manufacturer}=="Silicon Labs", ATTRS{product}=="CP2102 USB to UART Bridge Controller", SYMLINK+="CP2102_USB_UART_Convertor", MODE="0666"
