@@ -1,3 +1,0 @@
-[console_scripts]
-euler_angle_extractor = euler_angle_extractor.euler_angle_extractor:main
-
