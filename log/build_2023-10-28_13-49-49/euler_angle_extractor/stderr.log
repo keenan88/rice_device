@@ -1,5 +1,0 @@
-  File "/home/keenan/Documents/rice_device/install/euler_angle_extractor/lib/python3.10/site-packages/euler_angle_extractor/euler_angle_extractor.py", line 21
-    self.get_logger().info('I heard: "%s"' % msg.orientation.)
-                                                             ^
-SyntaxError: invalid syntax
-
