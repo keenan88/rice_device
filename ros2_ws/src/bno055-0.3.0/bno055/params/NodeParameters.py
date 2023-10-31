@@ -65,19 +65,19 @@ class NodeParameters:
         # Node timer frequency in Hz, defining how often sensor data is requested
         node.declare_parameter('data_query_frequency', value=10)
         # Node timer frequency in Hz, defining how often calibration status data is requested
-        node.declare_parameter('calib_status_frequency', value=0.1)
+        node.declare_parameter('calib_status_frequency', value=1)
         # sensor operation mode
         node.declare_parameter('operation_mode', value=0x0C)
         # placement_axis_remap defines the position and orientation of the sensor mount
         node.declare_parameter('placement_axis_remap', value='P1')
         # scaling factor for acceleration
-        node.declare_parameter('acc_factor', value=100.0)
+        node.declare_parameter('acc_factor', value=1)
         # scaling factor for magnetometer
         node.declare_parameter('mag_factor', value=16000000.0)
         # scaling factor for gyroscope
         node.declare_parameter('gyr_factor', value=900.0)
         # determines whether to use default offsets or not
-        node.declare_parameter('set_offsets', value=False)
+        node.declare_parameter('set_offsets', value=True)
         # +/- 2000 units (at max 2G) (1 unit = 1 mg = 1 LSB = 0.01 m/s2)
         node.declare_parameter('offset_acc', value=registers.DEFAULT_OFFSET_ACC)
         # +/- 6400 units (1 unit = 1/16 uT)

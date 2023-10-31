@@ -32,7 +32,9 @@ class AccelExtractor(Node):
         #self.get_logger().info('I heard: "%s"' % msg.orientation)
         accel = msg.linear_acceleration
         time = msg.header
-        
+
+        self.get_logger().info('%f %f %f %f %f' % (accel.x, accel.y, accel.z, time.stamp.sec, time.stamp.nanosec))
+
         self.samples['seconds'].append(time.stamp.sec)
         self.samples['nanosecs'].append(time.stamp.nanosec)
         self.samples['accelXs'].append(accel.x)
@@ -50,7 +52,8 @@ class AccelExtractor(Node):
             self.samples = {'seconds': [], 'nanosecs': [], 'accelXs': [], 'accelYs': [], 'accelZs': []}
 
         else:
-            self.get_logger().info('%f IMU accel samples obtained' % (len(self.samples['seconds'])))
+            pass
+            #self.get_logger().info('%f IMU accel samples obtained' % (len(self.samples['seconds'])))
             
 
 
