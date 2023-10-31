@@ -240,8 +240,7 @@ COM_WRITE = 0x00
 #: Signed hex 16 bit representation
 
 #: +/- 2000 units (at max 2G)    (1 unit = 1 mg = 1 LSB = 0.01 m/s2)
-#DEFAULT_OFFSET_ACC = [0xFFEC, 0x00A5, 0xFFE8]
-DEFAULT_OFFSET_ACC = [0x0000, 0x0000, 0x0000]
+DEFAULT_OFFSET_ACC = [0xFFEC, 0x00A5, 0xFFE8]
 #: +/- 6400 units                (1 unit = 1/16 uT)
 DEFAULT_OFFSET_MAG = [0xFFB4, 0xFE9E, 0x027D]
 #: +/- 2000 units up to 32000 (dps range dependent)               (1 unit = 1/16 dps)
@@ -258,5 +257,4 @@ DEFAULT_VARIANCE_ANGULAR_VEL = [0.04, 0.04, 0.04]
 DEFAULT_VARIANCE_ORIENTATION = [0.0159, 0.0159, 0.0159]
 # TODO(flynneva) calculate default magnetic variance matrice
 DEFAULT_VARIANCE_MAG = [0.0, 0.0, 0.0]
-
 

@@ -24,8 +24,11 @@ class AccelExtractor(Node):
         )
         self.subscription  # prevent unused variable warning
 
-        self.total_samples_desired = 100
+        self.total_samples_desired = 1000
         self.samples = {'seconds': [], 'nanosecs': [], 'accelXs': [], 'accelYs': [], 'accelZs': []}
+        self.x_offset = 0#7.71
+        self.y_offset = 0#-220.75
+        self.z_offset = 0#0.47
 
     
     def listener_callback(self, msg: Imu):
@@ -33,13 +36,14 @@ class AccelExtractor(Node):
         accel = msg.linear_acceleration
         time = msg.header
 
-        self.get_logger().info('%f %f %f %f %f' % (accel.x, accel.y, accel.z, time.stamp.sec, time.stamp.nanosec))
+        self.get_logger().info('%f %f %f %f %f' % (accel.x+ self.x_offset, accel.y + self.y_offset, \
+                                                   accel.z + self.z_offset, time.stamp.sec, time.stamp.nanosec))
 
         self.samples['seconds'].append(time.stamp.sec)
         self.samples['nanosecs'].append(time.stamp.nanosec)
-        self.samples['accelXs'].append(accel.x)
-        self.samples['accelYs'].append(accel.y)
-        self.samples['accelZs'].append(accel.z)
+        self.samples['accelXs'].append(accel.x + self.x_offset)
+        self.samples['accelYs'].append(accel.y + self.y_offset)
+        self.samples['accelZs'].append(accel.z + self.z_offset)
 
         if len(self.samples['seconds']) >= self.total_samples_desired:
 

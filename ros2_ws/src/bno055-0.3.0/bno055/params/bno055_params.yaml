@@ -6,30 +6,17 @@ bno055:
     uart_baudrate: 115200
     uart_timeout: 0.1
     data_query_frequency: 100
-
-    # Calibration happens internally, calib_status_frequency 
-    # is just how frequently the internal calibration status is printed in ROS
-    calib_status_frequency: 1 
-
+    calib_status_frequency: 1
     frame_id: "bno055"
-
-    # It looks like operation_mode isn't actually being used in the code. 
-    # As per page 25 of the BNO055 datasheet, there are a few different modes the IMU can operate in,
-    # Using different combinations of onboard sensors. As per page 22 of BNO055 datasheet, mode 0x0c (0b1100) is NDOF mode.
-    operation_mode: 0x0C 
-
+    operation_mode: 0x0C
     placement_axis_remap: "P2"
-
-    # These "factors" are NOT part of the BNO055 chip, 
-    # they are divisors of the read values for acceleration, magetic field, and gyro readings
     acc_factor: 100.0
     mag_factor: 16000000.0
     gyr_factor: 900.0
-
-    # As per page 51-53 of the BNO055 datasheet, the calibration process is trying
-    # to remove these offsets, so I think they just speed up the calibration process,
-    # they aren't necessarily necessary for the sensor to get calibrated.
-
+    set_offsets: false # set to true to use offsets below
+    offset_acc: [0xFFEC, 0x00A5, 0xFFE8]
+    offset_mag: [0xFFB4, 0xFE9E, 0x027D]
+    offset_gyr: [0x0002, 0xFFFF, 0xFFFF]
     ## Sensor standard deviation [x,y,z]
     ## Used to calculate covariance matrices
     ## defaults are used if parameters below are not provided
@@ -37,10 +24,3 @@ bno055:
     # variance_angular_vel: [0.0, 0.0, 0.0] # [rad/s]
     # variance_orientation: [0.0, 0.0, 0.0] # [rad]
     # variance_mag: [0.0, 0.0, 0.0] # [Tesla]
-
-    set_offsets: false # set to true to use offsets below
-    offset_acc: [0xFFEC, 0x00A5, 0xFFE8]
-    offset_mag: [0xFFB4, 0xFE9E, 0x027D]
-    offset_gyr: [0x0002, 0xFFFF, 0xFFFF]
-
-    
