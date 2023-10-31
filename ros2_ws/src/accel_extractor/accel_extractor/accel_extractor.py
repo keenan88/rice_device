@@ -8,7 +8,7 @@ from tf2_ros.static_transform_broadcaster import StaticTransformBroadcaster
 from geometry_msgs.msg import Accel
 from std_msgs.msg import Header
 from sensor_msgs.msg import Imu
-import csv
+import json
 
 samples_folder = '/home/keenan/Documents/rice_device/ros2_ws/src/accel_extractor/samples/'
 
@@ -25,33 +25,33 @@ class AccelExtractor(Node):
         self.subscription  # prevent unused variable warning
 
         self.total_samples_desired = 100
-        self.samples = []
-        self.samples_were_written = 0
+        self.samples = {'seconds': [], 'nanosecs': [], 'accelXs': [], 'accelYs': [], 'accelZs': []}
 
     
     def listener_callback(self, msg: Imu):
         #self.get_logger().info('I heard: "%s"' % msg.orientation)
         accel = msg.linear_acceleration
         time = msg.header
+        
+        self.samples['seconds'].append(time.stamp.sec)
+        self.samples['nanosecs'].append(time.stamp.nanosec)
+        self.samples['accelXs'].append(accel.x)
+        self.samples['accelYs'].append(accel.y)
+        self.samples['accelZs'].append(accel.z)
 
-        #self.get_logger().info('%f %f %f %f %f' % (accel.x, accel.y, accel.z, time.stamp.sec, time.stamp.nanosec))
+        if len(self.samples['seconds']) >= self.total_samples_desired:
 
-        if not self.samples_were_written:
+            file_path = samples_folder + str(time.stamp.sec) + '.json' # Using name as time stamp ensures unique filenames, no overwrites
 
-            self.samples.append([accel.x, accel.y, accel.z, time.stamp.sec, time.stamp.nanosec])
+            with open(file_path, "w") as outfile: 
+                json.dump(self.samples, outfile)
 
-            if len(self.samples) > self.total_samples_desired:
+            self.get_logger().info('%f Samples written to %s' % (len(self.samples['seconds']), file_path))
+            self.samples = {'seconds': [], 'nanosecs': [], 'accelXs': [], 'accelYs': [], 'accelZs': []}
 
-                file_path = samples_folder + 'samples1.csv'
-                with open(file_path, 'w', newline='') as csvfile:
-                    spamwriter = csv.writer(csvfile, delimiter=' ',
-                                            quotechar='|', quoting=csv.QUOTE_MINIMAL)
-                    self.samples.insert(0, ['accelX', 'accelY', 'accelZ', 'sec', 'nanosec'])
-                    for sample in self.samples:
-                        spamwriter.writerow(sample)
-                self.get_logger().info('%f Samples written to %s' % (len(self.samples), file_path))
-                self.samples_were_written = 1
-                
+        else:
+            self.get_logger().info('%f IMU accel samples obtained' % (len(self.samples['seconds'])))
+            
 
 
 

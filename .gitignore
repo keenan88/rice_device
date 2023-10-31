@@ -4,3 +4,6 @@
 install/
 log/
 build/
+ros2_ws/src/accel_extractor/samples/
+signal_analysis/spyder-venv/
+
