@@ -56,9 +56,9 @@ class SensorService:
 
         # create topic publishers:
         self.pub_imu_raw = node.create_publisher(Imu, prefix + 'imu_raw', QoSProf)
-        self.pub_imu = node.create_publisher(Imu, prefix + 'imu', QoSProf)
+        #self.pub_imu = node.create_publisher(Imu, prefix + 'imu', QoSProf)
         self.pub_mag = node.create_publisher(MagneticField, prefix + 'mag', QoSProf)
-        self.pub_temp = node.create_publisher(Temperature, prefix + 'temp', QoSProf)
+        #self.pub_temp = node.create_publisher(Temperature, prefix + 'temp', QoSProf)
         self.pub_calib_status = node.create_publisher(String, prefix + 'calib_status', QoSProf)
         self.srv = self.node.create_service(Trigger, prefix + 'calibration_request', self.calibration_request_callback)
 
@@ -89,7 +89,8 @@ class SensorService:
         if not (self.con.transmit(registers.BNO055_SYS_TRIGGER_ADDR, 1, bytes([0x00]))):
             self.node.get_logger().warn('Unable to start IMU.')
 
-        if not (self.con.transmit(registers.BNO055_UNIT_SEL_ADDR, 1, bytes([0x83]))):
+        # 0x82 = android orientation for rotation, radians per second for rot vel, mg for acceleration (BNO055 datasheet page 75)
+        if not (self.con.transmit(registers.BNO055_UNIT_SEL_ADDR, 1, bytes([0x82]))):
             self.node.get_logger().warn('Unable to set IMU units.')
 
         # The sensor placement configuration (Axis remapping) defines the
@@ -143,8 +144,8 @@ class SensorService:
         mag_msg = MagneticField()
         temp_msg = Temperature()
 
-        # read from sensor
-        buf = self.con.receive(registers.BNO055_ACCEL_DATA_X_LSB_ADDR, 45)
+        # read from sensor. Only read first 18 bytes (raw acc, mag, gyro)
+        buf = self.con.receive(registers.BNO055_ACCEL_DATA_X_LSB_ADDR, 18) 
         # Publish raw data
         imu_raw_msg.header.stamp = self.node.get_clock().now().to_msg()
         imu_raw_msg.header.frame_id = self.param.frame_id.value
@@ -158,6 +159,7 @@ class SensorService:
             0.0, 0.0, self.param.variance_orientation.value[2]
         ]
 
+        # Acceleration in the IMU's frame, no gravity cancellation (m/s^2)
         imu_raw_msg.linear_acceleration.x = \
             self.unpackBytesToFloat(buf[0], buf[1]) / self.param.acc_factor.value
         imu_raw_msg.linear_acceleration.y = \
@@ -169,6 +171,8 @@ class SensorService:
             0.0, self.param.variance_acc.value[1], 0.0,
             0.0, 0.0, self.param.variance_acc.value[2]
         ]
+
+        # Angular velocity in the IMU's frame
         imu_raw_msg.angular_velocity.x = \
             self.unpackBytesToFloat(buf[12], buf[13]) / self.param.gyr_factor.value
         imu_raw_msg.angular_velocity.y = \
@@ -182,43 +186,6 @@ class SensorService:
         ]
         # node.get_logger().info('Publishing imu message')
         self.pub_imu_raw.publish(imu_raw_msg)
-
-        # TODO: make this an option to publish?
-        # Publish filtered data
-        imu_msg.header.stamp = self.node.get_clock().now().to_msg()
-        imu_msg.header.frame_id = self.param.frame_id.value
-
-        q = Quaternion()
-        # imu_msg.header.seq = seq
-        q.w = self.unpackBytesToFloat(buf[24], buf[25])
-        q.x = self.unpackBytesToFloat(buf[26], buf[27])
-        q.y = self.unpackBytesToFloat(buf[28], buf[29])
-        q.z = self.unpackBytesToFloat(buf[30], buf[31])
-        # TODO(flynneva): replace with standard normalize() function
-        # normalize
-        norm = sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)
-        imu_msg.orientation.x = q.x / norm
-        imu_msg.orientation.y = q.y / norm
-        imu_msg.orientation.z = q.z / norm
-        imu_msg.orientation.w = q.w / norm
-
-        imu_msg.orientation_covariance = imu_raw_msg.orientation_covariance
-
-        imu_msg.linear_acceleration.x = \
-            self.unpackBytesToFloat(buf[32], buf[33]) / self.param.acc_factor.value
-        imu_msg.linear_acceleration.y = \
-            self.unpackBytesToFloat(buf[34], buf[35]) / self.param.acc_factor.value
-        imu_msg.linear_acceleration.z = \
-            self.unpackBytesToFloat(buf[36], buf[37]) / self.param.acc_factor.value
-        imu_msg.linear_acceleration_covariance = imu_raw_msg.linear_acceleration_covariance
-        imu_msg.angular_velocity.x = \
-            self.unpackBytesToFloat(buf[12], buf[13]) / self.param.gyr_factor.value
-        imu_msg.angular_velocity.y = \
-            self.unpackBytesToFloat(buf[14], buf[15]) / self.param.gyr_factor.value
-        imu_msg.angular_velocity.z = \
-            self.unpackBytesToFloat(buf[16], buf[17]) / self.param.gyr_factor.value
-        imu_msg.angular_velocity_covariance = imu_raw_msg.angular_velocity_covariance
-        self.pub_imu.publish(imu_msg)
 
         # Publish magnetometer data
         mag_msg.header.stamp = self.node.get_clock().now().to_msg()
@@ -236,13 +203,6 @@ class SensorService:
             0.0, 0.0, self.param.variance_mag.value[2]
         ]
         self.pub_mag.publish(mag_msg)
-
-        # Publish temperature
-        temp_msg.header.stamp = self.node.get_clock().now().to_msg()
-        temp_msg.header.frame_id = self.param.frame_id.value
-        # temp_msg.header.seq = seq
-        temp_msg.temperature = float(buf[44])
-        self.pub_temp.publish(temp_msg)
 
     def get_calib_status(self):
         """

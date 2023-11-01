@@ -18,7 +18,7 @@ class AccelExtractor(Node):
         super().__init__('AccelExtractor')
         self.subscription = self.create_subscription(
             Imu,
-            'bno055/imu',
+            'bno055/imu_raw',
             self.listener_callback,
             10 # QOS profile.
         )
@@ -36,8 +36,8 @@ class AccelExtractor(Node):
         accel = msg.linear_acceleration
         time = msg.header
 
-        self.get_logger().info('%f %f %f %f %f' % (accel.x+ self.x_offset, accel.y + self.y_offset, \
-                                                   accel.z + self.z_offset, time.stamp.sec, time.stamp.nanosec))
+        # self.get_logger().info('%f %f %f %f %f' % (accel.x+ self.x_offset, accel.y + self.y_offset, \
+        #                                            accel.z + self.z_offset, time.stamp.sec, time.stamp.nanosec))
 
         self.samples['seconds'].append(time.stamp.sec)
         self.samples['nanosecs'].append(time.stamp.nanosec)

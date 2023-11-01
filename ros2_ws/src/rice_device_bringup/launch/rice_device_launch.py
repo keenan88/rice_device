@@ -5,10 +5,10 @@ ros2_ws_path = '/home/keenan/Documents/rice_device/ros2_ws/'
 
 def generate_launch_description():
     return LaunchDescription([
-        Node(
-            package='euler_angle_extractor',
-            executable='euler_angle_extractor_exe',
-        ),
+        # Node(
+        #     package='euler_angle_extractor',
+        #     executable='euler_angle_extractor_exe',
+        # ),
         Node(
             package='bno055',
             executable='bno055',
