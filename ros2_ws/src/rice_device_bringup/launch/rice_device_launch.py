@@ -14,12 +14,16 @@ def generate_launch_description():
             executable='bno055',
         ),
         Node(
-             package='accel_extractor',
-             executable='accel_extractor_exe',
+            package='imu_calibrator',
+            executable='imu_calibrator_exe',
         ),
-        Node(
-            package='rviz2',
-            executable='rviz2',
-            arguments=['-d', [ros2_ws_path + 'src/rice_device_bringup/rviz_configs/rviz_bno055_config.rviz']]
-        )
+        # Node(
+        #      package='accel_extractor',
+        #      executable='accel_extractor_exe',
+        # ),
+        # Node(
+        #     package='rviz2',
+        #     executable='rviz2',
+        #     arguments=['-d', [ros2_ws_path + 'src/rice_device_bringup/rviz_configs/rviz_bno055_config.rviz']]
+        # )
     ])

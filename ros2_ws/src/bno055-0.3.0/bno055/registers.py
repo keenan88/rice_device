@@ -240,11 +240,11 @@ COM_WRITE = 0x00
 #: Signed hex 16 bit representation
 
 #: +/- 2000 units (at max 2G)    (1 unit = 1 mg = 1 LSB = 0.01 m/s2)
-DEFAULT_OFFSET_ACC = [0xFFEC, 0x00A5, 0xFFE8]
+DEFAULT_OFFSET_ACC = [0, 0, 0]
 #: +/- 6400 units                (1 unit = 1/16 uT)
-DEFAULT_OFFSET_MAG = [0xFFB4, 0xFE9E, 0x027D]
+DEFAULT_OFFSET_MAG = [0, 0, 0]
 #: +/- 2000 units up to 32000 (dps range dependent)               (1 unit = 1/16 dps)
-DEFAULT_OFFSET_GYR = [0x0002, 0xFFFF, 0xFFFF]
+DEFAULT_OFFSET_GYR = [0, 0, 0]
 
 DEFAULT_RADIUS_MAG = 0x0
 DEFAULT_RADIUS_ACC = 0x3E8

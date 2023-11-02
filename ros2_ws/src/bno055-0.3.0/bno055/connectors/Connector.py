@@ -79,6 +79,7 @@ class Connector:
             else:
                 raise TransmissionException('READ-request failed with error code %s'
                                             % hex(buf_in[1]))
+            
         # Check for correct READ response header:
         if buf_in[0] != registers.COM_START_BYTE_RESP:
             raise TransmissionException('Wrong READ-request response header %s' % hex(buf_in[0]))

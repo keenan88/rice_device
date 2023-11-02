@@ -55,7 +55,7 @@ class NodeParameters:
         # The type of the sensor connection. Either "uart" or "i2c":
         node.declare_parameter(name='connection_type', value=UART.CONNECTIONTYPE_UART)
         # UART port
-        node.declare_parameter('uart_port', value='/dev/ttyUSB0')
+        node.declare_parameter('uart_port', value='/dev/CP2102_USB_UART_Convertor2')
         # UART Baud Rate
         node.declare_parameter('uart_baudrate', value=115200)
         # UART Timeout in seconds
@@ -77,7 +77,7 @@ class NodeParameters:
         # scaling factor for gyroscope
         node.declare_parameter('gyr_factor', value=900.0)
         # determines whether to use default offsets or not
-        node.declare_parameter('set_offsets', value=False)
+        node.declare_parameter('set_offsets', value=True)
         # +/- 2000 units (at max 2G) (1 unit = 1 mg = 1 LSB = 0.01 m/s2)
         node.declare_parameter('offset_acc', value=registers.DEFAULT_OFFSET_ACC)
         # +/- 6400 units (1 unit = 1/16 uT)
