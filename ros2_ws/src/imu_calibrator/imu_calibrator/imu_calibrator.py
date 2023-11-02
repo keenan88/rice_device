@@ -30,8 +30,12 @@ class IMU_Calibration(Node):
         self.acc_x_offset = -0.595 - 9.985 - 1.61
         self.acc_y_offset = -20.812 - 0.848 + 0.62
         self.acc_z_offset = 3.557 + 22.09 + 0.6
-
         self.acc_scalar = 0.01
+
+        self.ang_vel_x_offset = 0.12
+        self.ang_vel_y_offset = -0.18
+        self.ang_vel_z_offset = 0.83
+        self.ang_vel_scalar = 1 # Probalbly not 1, needs tuning
 
 
     
@@ -44,6 +48,10 @@ class IMU_Calibration(Node):
         msg.linear_acceleration.x = (msg.linear_acceleration.x + self.acc_x_offset) * self.acc_scalar
         msg.linear_acceleration.y = (msg.linear_acceleration.y + self.acc_y_offset) * self.acc_scalar
         msg.linear_acceleration.z = (msg.linear_acceleration.z + self.acc_z_offset) * self.acc_scalar
+
+        msg.angular_velocity.x = (msg.angular_velocity.x + self.ang_vel_x_offset) * self.ang_vel_scalar
+        msg.angular_velocity.y = (msg.angular_velocity.y + self.ang_vel_y_offset) * self.ang_vel_scalar
+        msg.angular_velocity.z = (msg.angular_velocity.z + self.ang_vel_z_offset) * self.ang_vel_scalar
 
         self.samples['seconds'].append(msg.header.stamp.sec)
         self.samples['nanosecs'].append(msg.header.stamp.nanosec)
