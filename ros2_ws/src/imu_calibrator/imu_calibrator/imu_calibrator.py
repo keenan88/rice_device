@@ -6,7 +6,7 @@ from sensor_msgs.msg import Imu
 import json
 import numpy as np
 
-samples_folder = '/home/keenan/Documents/rice_device/signal_analysis/database/accelerometer/'
+samples_folder = '/home/keenan/Documents/rice_device/signal_analysis/database/imu/'
 
 class IMU_Calibration(Node):
 
@@ -27,9 +27,11 @@ class IMU_Calibration(Node):
             'gyro':  {'x': [], 'y': [], 'z': []}
         }
 
-        self.acc_x_offset = -0.02 - 0.0144 - 0.0251
-        self.acc_y_offset = -1.9 - 0.227 + 0.0458
-        self.acc_z_offset = 0.33 + 0.0237 + 0.002
+        self.acc_x_offset = -0.595 - 9.985 - 1.61
+        self.acc_y_offset = -20.812 - 0.848 + 0.62
+        self.acc_z_offset = 3.557 + 22.09 + 0.6
+
+        self.acc_scalar = 0.01
 
 
     
@@ -39,9 +41,9 @@ class IMU_Calibration(Node):
         # self.get_logger().info('%f %f %f %f %f' % (accel.x+ self.x_offset, accel.y + self.y_offset, \
         #                                            accel.z + self.z_offset, time.stamp.sec, time.stamp.nanosec))
 
-        msg.linear_acceleration.x = msg.linear_acceleration.x + self.acc_x_offset
-        msg.linear_acceleration.y = msg.linear_acceleration.y + self.acc_y_offset
-        msg.linear_acceleration.z = msg.linear_acceleration.z + self.acc_z_offset
+        msg.linear_acceleration.x = (msg.linear_acceleration.x + self.acc_x_offset) * self.acc_scalar
+        msg.linear_acceleration.y = (msg.linear_acceleration.y + self.acc_y_offset) * self.acc_scalar
+        msg.linear_acceleration.z = (msg.linear_acceleration.z + self.acc_z_offset) * self.acc_scalar
 
         self.samples['seconds'].append(msg.header.stamp.sec)
         self.samples['nanosecs'].append(msg.header.stamp.nanosec)
@@ -57,7 +59,7 @@ class IMU_Calibration(Node):
 
         if len(self.samples['seconds']) >= self.total_samples_desired:
 
-            file_path = samples_folder + str(msg.header.stamp.sec) + '.json' # Using name as time stamp ensures unique filenames, no overwrites
+            #file_path = samples_folder + str(msg.header.stamp.sec) + '.json' # Using name as time stamp ensures unique filenames, no overwrites
             file_path = samples_folder + 'neg_z_on_table' + '.json' # Using name as time stamp ensures unique filenames, no overwrites
 
             with open(file_path, "w") as outfile: 

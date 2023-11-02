@@ -36,7 +36,7 @@ def get_RMSE(signal):
 for sampleset in ['neg_z_on_table']: #, 'neg_x_on_table', 'neg_y_on_table'
 
     print(sampleset)
-    imu_readings = db.read_json_file('accelerometer/' + sampleset)
+    imu_readings = db.read_json_file('imu/' + sampleset)
     
     time_series = au.extract_time_series(imu_readings['seconds'], imu_readings['nanosecs'])
     

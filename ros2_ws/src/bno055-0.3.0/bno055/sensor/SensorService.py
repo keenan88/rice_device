@@ -159,11 +159,11 @@ class SensorService:
 
         # Acceleration in the IMU's frame, no gravity cancellation (m/s^2)
         imu_raw_msg.linear_acceleration.x = \
-            self.unpackBytesToFloat(buf[0], buf[1]) / self.param.acc_factor.value
+            self.unpackBytesToFloat(buf[0], buf[1]) #/ self.param.acc_factor.value
         imu_raw_msg.linear_acceleration.y = \
-            self.unpackBytesToFloat(buf[2], buf[3]) / self.param.acc_factor.value
+            self.unpackBytesToFloat(buf[2], buf[3]) #/ self.param.acc_factor.value
         imu_raw_msg.linear_acceleration.z = \
-            self.unpackBytesToFloat(buf[4], buf[5]) / self.param.acc_factor.value
+            self.unpackBytesToFloat(buf[4], buf[5]) #/ self.param.acc_factor.value
         imu_raw_msg.linear_acceleration_covariance = [
             self.param.variance_acc.value[0], 0.0, 0.0,
             0.0, self.param.variance_acc.value[1], 0.0,
@@ -172,11 +172,11 @@ class SensorService:
 
         # Angular velocity in the IMU's frame
         imu_raw_msg.angular_velocity.x = \
-            self.unpackBytesToFloat(buf[12], buf[13]) / self.param.gyr_factor.value
+            self.unpackBytesToFloat(buf[12], buf[13]) #/ self.param.gyr_factor.value
         imu_raw_msg.angular_velocity.y = \
-            self.unpackBytesToFloat(buf[14], buf[15]) / self.param.gyr_factor.value
+            self.unpackBytesToFloat(buf[14], buf[15]) #/ self.param.gyr_factor.value
         imu_raw_msg.angular_velocity.z = \
-            self.unpackBytesToFloat(buf[16], buf[17]) / self.param.gyr_factor.value
+            self.unpackBytesToFloat(buf[16], buf[17]) #/ self.param.gyr_factor.value
         imu_raw_msg.angular_velocity_covariance = [
             self.param.variance_angular_vel.value[0], 0.0, 0.0,
             0.0, self.param.variance_angular_vel.value[1], 0.0,
@@ -190,11 +190,11 @@ class SensorService:
         mag_msg.header.frame_id = self.param.frame_id.value
         # mag_msg.header.seq = seq
         mag_msg.magnetic_field.x = \
-            self.unpackBytesToFloat(buf[6], buf[7]) / self.param.mag_factor.value
+            self.unpackBytesToFloat(buf[6], buf[7]) #/ self.param.mag_factor.value
         mag_msg.magnetic_field.y = \
-            self.unpackBytesToFloat(buf[8], buf[9]) / self.param.mag_factor.value
+            self.unpackBytesToFloat(buf[8], buf[9]) #/ self.param.mag_factor.value
         mag_msg.magnetic_field.z = \
-            self.unpackBytesToFloat(buf[10], buf[11]) / self.param.mag_factor.value
+            self.unpackBytesToFloat(buf[10], buf[11]) #/ self.param.mag_factor.value
         mag_msg.magnetic_field_covariance = [
             self.param.variance_mag.value[0], 0.0, 0.0,
             0.0, self.param.variance_mag.value[1], 0.0,

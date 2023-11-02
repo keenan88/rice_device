@@ -13,6 +13,10 @@ def generate_launch_description():
             package='bno055',
             executable='bno055',
         ),
+        # Node(
+        #     package='mag_calibrator',
+        #     executable='mag_calibrator_exe',
+        # ),
         Node(
             package='imu_calibrator',
             executable='imu_calibrator_exe',
