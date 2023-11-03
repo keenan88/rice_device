@@ -25,10 +25,13 @@ class IMU_Calibration(Node):
             'mag': {'x': [], 'y': [], 'z': []}
         }
 
-        self.mag_x_offset = 0
-        self.mag_y_offset = 0
-        self.mag_z_offset = 0
+        self.mag_x_offset = -446.08#-421.795
+        self.mag_y_offset = -516#-462.89
+        self.mag_z_offset = 47.5#15.36
 
+        self.mag_scalar_x = 7.15#7.37
+        self.mag_scalar_y = -7.12#7.417
+        self.mag_scalar_z = 7.22#6.85
 
     
     def listener_callback(self, msg: MagneticField):
@@ -36,6 +39,10 @@ class IMU_Calibration(Node):
         msg.magnetic_field.x += self.mag_x_offset
         msg.magnetic_field.y += self.mag_y_offset
         msg.magnetic_field.z += self.mag_z_offset
+
+        msg.magnetic_field.x /= self.mag_scalar_x
+        msg.magnetic_field.y /= self.mag_scalar_y
+        msg.magnetic_field.z /= self.mag_scalar_z
 
         self.samples['seconds'].append(msg.header.stamp.sec)
         self.samples['nanosecs'].append(msg.header.stamp.nanosec)
@@ -54,8 +61,8 @@ class IMU_Calibration(Node):
 
         if len(self.samples['seconds']) >= self.total_samples_desired:
 
-            #file_path = samples_folder + str(msg.header.stamp.sec) + '.json' # Using name as time stamp ensures unique filenames, no overwrites
-            file_path = samples_folder + 'neg_z_on_table' + '.json' # Using name as time stamp ensures unique filenames, no overwrites
+            file_path = samples_folder + str(msg.header.stamp.sec) + '.json' # Using name as time stamp ensures unique filenames, no overwrites
+            #file_path = samples_folder + 'neg_z_on_table' + '.json' # Using name as time stamp ensures unique filenames, no overwrites
 
             with open(file_path, "w") as outfile: 
                 json.dump(self.samples, outfile)
