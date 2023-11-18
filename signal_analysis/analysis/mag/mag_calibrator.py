@@ -38,36 +38,96 @@ def plot_pos(time, accel):
 def get_RMSE(signal):
     return round(np.sqrt(np.mean(np.square(signal))), 5)
 
+readings = {}
+major_field_strength = 53.26 * np.sin(69.5 * np.pi/180)
+minor_field_strength = 53.26 * np.cos(69.5 * np.pi/180)
 
-
-for sampleset in ['x_south', 'x_north', 'y_south', 'y_north', 'z_south', 'z_north']:
-
+for minor_ax in ['x', 'y', 'z']:
+    
+    readings_minor_ax = []
+                    
+    sampleset = minor_ax + 'east'
+    
     print(sampleset)
-    mag_readings = db.read_json_file('magnetometer/' + sampleset)
-    
-    time_series = extract_time_series(mag_readings['seconds'], mag_readings['nanosecs'])
-    
-    square_sum = 0
-    
-    fig, ax = plt.subplots()
-    
-    for dimension, samples in mag_readings['mag'].items():
-        
-        ax.plot(time_series[1:], samples[1:], label=dimension)
-        
-        print(dimension + ":", np.mean(samples[1:]))
-        
-        #square_sum += np.mean(np.square(samples))
-        
-    ax.grid()
-    ax.set_xlabel("Time (s)")
 
-    ax.set_ylabel("Magnetic field (micro teslas)")
-    ax.set_title(sampleset + ": Unfiltered, in each dimension over time")
-    ax.legend()
-    fig.show()
+    try:
+        
+        mag_readings = db.read_json_file('magnetometer/' + sampleset)
+        
+        minor_axis_readings = mag_readings['mag'][minor_ax]
+        
+        avg = round(np.mean(minor_axis_readings[1:]), 2)
+        #print(minor_ax + ": " + str(avg))
+        
+        readings_minor_ax.append(avg)
+        
+        time_series = extract_time_series(mag_readings['seconds'], mag_readings['nanosecs'])
+        
+        
+        square_sum = 0
+        
+        fig, ax = plt.subplots()
+        
+        for dimension, samples in mag_readings['mag'].items():
+            
+            ax.plot(time_series[1:], samples[1:], label=dimension)
+            
+            avg = np.mean(samples[1:])
+            
+            #print(dimension + ":", avg)
+            
+            if dimension is not minor_ax:
+            
+                # Assumed that sensor Z is up, sensor Y is north
+                if minor_ax == 'x' and dimension == 'z': 
+                    scalar = round(major_field_strength / avg, 4)
+                    
+                    
+                elif minor_ax == 'x' and dimension =='y':
+                    scalar = round(minor_field_strength / avg, 4)
+                    
+                # Assumed that sensor Z is up, sensor Y is north
+                if minor_ax == 'y' and dimension == 'x': 
+                    scalar = round(minor_field_strength / avg, 4)
+                    
+                elif minor_ax == 'y' and dimension =='z':
+                    scalar = round(major_field_strength / avg, 4)
+                    
+                # Assumed that sensor Z is up, sensor Y is north
+                if minor_ax == 'z' and dimension == 'x': 
+                    scalar = round(major_field_strength / avg, 4)
+                    
+                elif minor_ax == 'z' and dimension =='y':
+                    scalar = round(minor_field_strength / avg, 4)
+                    
+                
+                print("Scalar ", dimension, scalar)
+
+
+
+            
+            
+        
+            
+        ax.grid()
+        ax.set_xlabel("Time (s)")
+        ax.set_ylim(-850, 350)
+    
+        ax.set_ylabel("Magnetic field (micro teslas)")
+        ax.set_title(sampleset + ": Unfiltered, in each dimension over time")
+        ax.legend()
+        fig.show()
+    
+    except:
+        print("Samplset not available")
         
     print()
+                    
+                
+    readings.update({minor_ax : readings_minor_ax})
+                
+    
+
     
     
     

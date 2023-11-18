@@ -246,8 +246,8 @@ DEFAULT_OFFSET_MAG = [0, 0, 0]
 #: +/- 2000 units up to 32000 (dps range dependent)               (1 unit = 1/16 dps)
 DEFAULT_OFFSET_GYR = [0, 0, 0]
 
-DEFAULT_RADIUS_MAG = 0x0
-DEFAULT_RADIUS_ACC = 0x3E8
+DEFAULT_RADIUS_MAG = 0x1
+DEFAULT_RADIUS_ACC = 0x1
 #: Sensor standard deviation squared (^2) defaults [x, y, z]
 #: Used to get covariance matrices (stddev^2 = variance)
 #: values taken from this ROS1 driver from octanis:

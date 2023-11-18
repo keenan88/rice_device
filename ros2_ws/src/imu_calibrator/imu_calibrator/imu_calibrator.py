@@ -35,7 +35,7 @@ class IMU_Calibration(Node):
         self.ang_vel_x_offset = 0.12
         self.ang_vel_y_offset = -0.18
         self.ang_vel_z_offset = 0.83
-        self.ang_vel_scalar = 1 # Probalbly not 1, needs tuning
+        self.       ang_vel_scalar = 1 # Probalbly not 1, needs tuning
 
 
     
