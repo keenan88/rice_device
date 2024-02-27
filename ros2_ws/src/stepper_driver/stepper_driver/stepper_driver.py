@@ -43,9 +43,9 @@ class StepperDriver(Node):
         self.step_pin.off() 
         usleep(20) # Minimum 1.9us low time, as per page 8 of drv8834 datasheet
 
-    def set_speed_cb(self, msg):
-        self.degrees_per_s = float(msg.data)
-        pass
+    def set_speed_cb(self, desired_deg_per_s: String):
+        self.set_motor_degrees_per_s(float(desired_deg_per_s.data))
+        
 
 
 
