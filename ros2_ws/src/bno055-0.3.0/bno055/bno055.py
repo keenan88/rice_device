@@ -26,9 +26,6 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-# BNO055 datasheet: https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bno055-ds000.pdf
-# Calibration process detailed on page 51
-# BNO055 breakout board: https://learn.adafruit.com/adafruit-bno055-absolute-orientation-sensor/overview
 
 import sys
 import threading
@@ -60,7 +57,6 @@ class Bno055Node(Node):
 
     def setup(self):
         # Initialize ROS2 Node Parameters:
-
         self.param = NodeParameters(self)
 
         # Get connector according to configured sensor connection type:

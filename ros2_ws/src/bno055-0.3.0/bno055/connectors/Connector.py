@@ -75,11 +75,10 @@ class Connector:
             # Error 0x07 (BUS_OVER_RUN_ERROR) can be "normal" if data fusion is not yet ready
             if buf_in[1] == 7:
                 # see #5
-                raise BusOverRunException('Data fusion not ready, resend read request')
+                raise BusOverRunException('Data ready, resend read request')
             else:
                 raise TransmissionException('READ-request failed with error code %s'
                                             % hex(buf_in[1]))
-            
         # Check for correct READ response header:
         if buf_in[0] != registers.COM_START_BYTE_RESP:
             raise TransmissionException('Wrong READ-request response header %s' % hex(buf_in[0]))

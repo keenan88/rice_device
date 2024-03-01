@@ -112,6 +112,8 @@ for t in range(len(time) - 1):
     C3.append(C3_values.pop(0))
     C4.append(C4_values.pop(0))
     
+    # Opportunity for adding LP filtering here, will add as necessary during testing
+    
     if FS < len(L2_states) - 1:
         
         if [L1[-1], L2[-1], L3[-1], L4[-1]] == [L1_states[FS + 1], L2_states[FS + 1], L3_states[FS + 1], L4_states[FS + 1]]:
