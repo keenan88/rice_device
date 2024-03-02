@@ -51,14 +51,14 @@ class Locomotion(Node):
             pass
 
         elif self.robot_behaviour_state.data == 4:
-            robot_vel.linear.z = self.angular_speed_rad_per_s
+            robot_vel.angular.z = self.angular_speed_rad_per_s
 
         if self.new_behaviour_state:
             self.new_behaviour_state = False
             self.get_logger().info(
-                'Robot Velocity Changed to: Vx: %f, Vy: %f, Vz: %f' % 
-                (round(robot_vel.linear.x, 2), round(robot_vel.linear.y, 2), round(robot_vel.linear.z, 2)) 
-                + ' ' + 'Wx: %f, Wy: %f, Wz: %f' % (round(robot_vel.angular.x, 2), round(robot_vel.angular.y, 2), round(robot_vel.angular.z, 2))
+                'Robot Velocity Changed to: Vx: %.2f, Vy: %.2f, Vz: %.2f' % 
+                (robot_vel.linear.x, robot_vel.linear.y, robot_vel.linear.z) 
+                + ' ' + 'Wx: %.2f, Wy: %.2f, Wz: %.2f' % (robot_vel.angular.x, robot_vel.angular.y, robot_vel.angular.z)
                 + ' ' + 'Robot Behaviour State: %d' % self.robot_behaviour_state.data
             )
 

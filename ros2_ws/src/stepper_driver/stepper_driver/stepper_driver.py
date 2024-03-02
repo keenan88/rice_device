@@ -100,10 +100,8 @@ class StepperDriver(Node):
 
         if right_wheel_deg_per_s > 0:
             self.right_dir_pin.on()
-            print("Dir pin off")
         else:
             self.right_dir_pin.off()
-            print("Dir pin on")
         
         if left_wheel_deg_per_s > 0:
             self.left_dir_pin.on()
