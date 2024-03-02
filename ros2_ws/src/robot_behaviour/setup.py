@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            
+            'robot_behaviour_exe = robot_behaviour.robot_behaviour:main'
         ],
     },
 )
