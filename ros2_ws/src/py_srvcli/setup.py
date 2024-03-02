@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'robot_behaviour'
+package_name = 'py_srvcli'
 
 setup(
     name=package_name,
@@ -16,11 +16,11 @@ setup(
     maintainer='keenan',
     maintainer_email='lakingsfan08@gmail.com',
     description='TODO: Package description',
-    license='TODO: License declaration',
+    license='Apache-2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            
+            'example_service_exe = py_srvcli.service_member_function:main',
         ],
     },
 )
