@@ -22,7 +22,7 @@ class StepperDriver(Node):
         self.ang_max_rad_per_s = pi / 2
 
         self.vel_sub = self.create_subscription(Twist, '/cmd_vel', self.set_motors_degrees_per_s, 10)
-        self.odom_publisher = self.create_publisher(Odometry, 'wheel_odom', 10)
+        self.odom_publisher = self.create_publisher(Odometry, '/wheel_odom', 10)
         self.odom_msg = Odometry()
         self.odom_msg.header.frame_id = 'world'
         self.odom_msg.child_frame_id = 'robot'
