@@ -23,7 +23,7 @@ class Locomotion(Node):
 
         self.robot_speed_publisher = self.create_publisher(Twist, '/cmd_vel', 10)
 
-        self.robot_velocity_update_period_s = 1/60
+        self.robot_velocity_update_period_s = 1
         self.robot_velocity_timer = self.create_timer(
             self.robot_velocity_update_period_s, 
             self.robot_velocity_callback

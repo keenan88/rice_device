@@ -12,7 +12,7 @@ class Robot_Behaviour(Node):
         self.ROBOT_BEHAIOUR_STOP = Int32(data = 3)
         self.ROBOT_BEHAIOUR_TURN = Int32(data = 4)
         
-        self.robot_behaviour_state = self.ROBOT_BEHAIOUR_INITIALIZE
+        self.robot_behaviour_state = self.ROBOT_BEHAIOUR_LINEAR_SLOW_SPEED
 
         self.behaviour_state_publisher = self.create_publisher(Int32, '/robot_behaviour_state', 10)
         self.behaviour_state_publisher.publish(self.ROBOT_BEHAIOUR_INITIALIZE)

@@ -33,11 +33,13 @@ class StepperDriver(Node):
         self.left_stopped = False
         self.right_stopped = False
 
-        self.right_step_pin = DigitalOutputDevice(pin = 17, active_high=True, initial_value=False)
-        self.right_dir_pin = DigitalOutputDevice(pin = 27, active_high=True, initial_value=False)
+        self.right_step_pin = DigitalOutputDevice(pin = 23, active_high=True, initial_value=False)
+        self.right_dir_pin = DigitalOutputDevice(pin = 24, active_high=True, initial_value=False)
 
-        self.left_step_pin = DigitalOutputDevice(pin = 23, active_high=True, initial_value=False)
-        self.left_dir_pin = DigitalOutputDevice(pin = 24, active_high=True, initial_value=False)
+        self.left_step_pin = DigitalOutputDevice(pin = 14, active_high=True, initial_value=False)
+        self.left_dir_pin = DigitalOutputDevice(pin = 15, active_high=True, initial_value=False)
+
+        self.lps = 0
 
         starting_velocity = Twist()
         self.set_motors_degrees_per_s(starting_velocity)
@@ -99,9 +101,9 @@ class StepperDriver(Node):
             self.left_stopped = True
 
         if right_wheel_deg_per_s > 0:
-            self.right_dir_pin.on()
-        else:
             self.right_dir_pin.off()
+        else:
+            self.right_dir_pin.on()
         
         if left_wheel_deg_per_s > 0:
             self.left_dir_pin.on()
@@ -110,7 +112,7 @@ class StepperDriver(Node):
 
     def right_step_callback(self):
 
-        if not self.right_stopped:        
+        if not self.right_stopped:     
             self.right_step_pin.on()
             usleep(20) # Minimum 1.9us high time, as per page 8 of drv8834 datasheet
             self.right_step_pin.off() 
@@ -119,7 +121,7 @@ class StepperDriver(Node):
     def left_step_callback(self):
         
         if not self.left_stopped:
-
+            self.lps += 1
             self.left_step_pin.on()
             usleep(20) # Minimum 1.9us high time, as per page 8 of drv8834 datasheet
             self.left_step_pin.off() 
