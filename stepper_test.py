@@ -19,14 +19,14 @@ left_dir_pin = DigitalOutputDevice(pin = 15, active_high=True, initial_value=Fal
 
 
 right_dir_pin.off()
-left_dir_pin.off()
+left_dir_pin.on()
 
 right_step_pin.off() 
 left_step_pin.off() 
 
 sleep(1)
 
-while True:
+if 1:
 
     right_step_pin.on() 
     usleep(20)
@@ -38,5 +38,5 @@ while True:
     left_step_pin.off() 
     usleep(20) # Minimum 1.9us low time, as per page 8 of drv8834 datasheet
 
-    sleep(0.01)
+    sleep(0.025)
 

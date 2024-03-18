@@ -106,9 +106,9 @@ class StepperDriver(Node):
             self.right_dir_pin.on()
         
         if left_wheel_deg_per_s > 0:
-            self.left_dir_pin.on()
-        else:
             self.left_dir_pin.off()
+        else:
+            self.left_dir_pin.on()
 
     def right_step_callback(self):
 
