@@ -14,15 +14,13 @@ class LinearActuator(Node):
     def __init__(self):
         super().__init__('Linear_Actuator')
 
-        self.movement_time_length_s = 6
+        
 
         self.side_LI_movement_time_elapsed_s = 0
         self.center_LI_movement_time_elapsed_s = 0
 
         self.side_LI_in_motion = False
         self.center_LI_in_motion = False
-
-        timer_period_s = 1
 
         # LA actions
         self._action_server = ActionServer(
@@ -32,12 +30,17 @@ class LinearActuator(Node):
             self.execute_callback
         )
         
+        timer_period_s = 1 / 1000
+        self.movement_time_length_s = 6
+        self.side_ms = 0
+        self.center_ms = 0
+        self.la_move_time_s = 6
+
         # Timers to give feedback after HE's have moved
-        self.sideTimer = self.create_timer(timer_period_s, self.stop_all)
-        self.centerTimer = self.create_timer(timer_period_s, self.stop_all)
+        self.sideTimer = self.create_timer(timer_period_s, self.increment_side_ms)
+        self.centerTimer = self.create_timer(timer_period_s, self.increment_center_ms)
         
         self.centerTimer.cancel()
-        self.sideTimer.cancel()
 
         self.isCenterMoving = False
 
@@ -67,29 +70,59 @@ class LinearActuator(Node):
         self.centerLA.start(0)
         self.leftLA.start(0)
 
+    def increment_side_ms(self):
+        #self.side_ms += 1
+        pass
+
+    def increment_center_ms(self):
+        self.center_ms += 1
+
     def execute_callback(self, goal_handle):
         self.get_logger().info('Executing goal...')
 
+        # Start movement
+        self.rightLA.ChangeDutyCycle(self.dutyCycle)
+        self.leftLA.ChangeDutyCycle(self.dutyCycle)
+
+        if goal_handle.request.desired_pos == "down":
+            GPIO.output(self.in1,GPIO.HIGH)
+            GPIO.output(self.in2,GPIO.LOW)
+        elif goal_handle.request.desired_pos == "up":
+            GPIO.output(self.in1,GPIO.LOW)
+            GPIO.output(self.in2,GPIO.HIGH)
+
         result = MoveLIAction.Result()
-        
 
-        feedback_msg = MoveLIAction.Feedback()
-        feedback_msg.in_motion = True
+        if goal_handle.request.desired_pos in ["down", "up"]:
+            feedback_msg = MoveLIAction.Feedback()
+            feedback_msg.in_motion = True
 
-        for i in range(100):
-            goal_handle.publish_feedback(feedback_msg)
-            self.get_logger().info('Sending feedback')
+            start_time_s = self.get_clock().now().nanoseconds / 1e9
+            curr_time_s = start_time_s
+            print(start_time_s)
 
-        result.movement_time_completed = True
-        goal_handle.succeed()
+            while curr_time_s - start_time_s < self.la_move_time_s:
+                goal_handle.publish_feedback(feedback_msg)
+                curr_time_s = self.get_clock().now().nanoseconds / 1e9
+                print(curr_time_s - start_time_s)
+            
+            result.movement_time_completed = True
+            goal_handle.succeed()
+
+            # Stop after movement
+            self.rightLA.ChangeDutyCycle(0)
+            self.leftLA.ChangeDutyCycle(0)
+
+        else:
+            result.movement_time_completed = False
+            goal_handle.abort()
         
         return result
-
 
     def start_center_LA_move(self, moveDown):
         self.centerTimer.reset()
         self.stop_all()
-        self.centerLA.ChangeDutyCycle(self.dutyCycle) # Can these be moved to the constructor?
+        self.centerLA.ChangeDutyCycle(self.dutyCycle)
 
         if moveDown.data:
             GPIO.output(self.in1,GPIO.HIGH)

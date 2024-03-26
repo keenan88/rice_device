@@ -54,7 +54,7 @@ class Robot_Behaviour(Node):
         )   
 
         self.action_client = ActionClient(self, MoveLIAction, 'move_side_lis')
-        future = self.send_goal("cool_pos")
+        self.send_side_LI_goal("up")
 
         self.human_input_subscriber = self.create_subscription(
             Int32, '/human_input', self.human_input_callback, 10
@@ -64,25 +64,25 @@ class Robot_Behaviour(Node):
             Odometry, '/robot_odom', self.robot_odom_callback, 10
         )
 
-        self.center_LI_reached_goal = False
-        self.side_LI_reached_goal = False
+        self.center_LI_in_motion = False
+        self.side_LI_in_motion = False
+
         self.central_shaft_reached_goal = False
         self.human_input_received = False
+
         self.robot_odom = Odometry()
 
-
-
-    def send_goal(self, desired_pos):
+    def send_side_LI_goal(self, desired_pos):
         goal_msg = MoveLIAction.Goal()
         goal_msg.desired_pos = desired_pos
 
         self.action_client.wait_for_server()
 
-        self.send_goal_future = self.action_client.send_goal_async(goal_msg, feedback_callback = self.feedback_callback)
+        self.send_goal_future = self.action_client.send_goal_async(goal_msg, feedback_callback = self.side_LI_feedback_cb)
 
-        self.send_goal_future.add_done_callback(self.goal_response_callback)
+        self.send_goal_future.add_done_callback(self.side_LI_response_cb)
 
-    def goal_response_callback(self, future):
+    def side_LI_response_cb(self, future):
         goal_handle = future.result()
         if not goal_handle.accepted:
             self.get_logger().info('Goal rejected :(')
@@ -91,16 +91,20 @@ class Robot_Behaviour(Node):
         self.get_logger().info('Goal accepted :)')
 
         self.get_result_future = goal_handle.get_result_async()
-        self.get_result_future.add_done_callback(self.get_result_callback)
+        self.get_result_future.add_done_callback(self.side_LI_result_cb)
 
-    def get_result_callback(self, future):
+    def side_LI_result_cb(self, future):
         result = future.result().result
         self.get_logger().info('Result: {0}'.format(result.movement_time_completed))
-        #rclpy.shutdown()
 
-    def feedback_callback(self, feedback_msg):
+        self.side_LI_in_motion = not result.movement_time_completed
+
+        print(self.side_LI_in_motion)
+
+    def side_LI_feedback_cb(self, feedback_msg):
         feedback = feedback_msg.feedback
-        print("Got feedback: ", feedback)
+        self.side_LI_in_motion = feedback.in_motion
+        print("Got feedback: ", self.side_LI_in_motion)
 
 
 
@@ -108,13 +112,6 @@ class Robot_Behaviour(Node):
     # Callback function to handle TF messages
         print("Received TF message:")
         print(msg)
-
-
-    def center_linear_actuator_cb(self, LI_reached_goal: Bool):
-        self.center_LI_reached_goal = LI_reached_goal.msg
-
-    def side_linear_actuator_cb(self, LI_reached_goal: Bool):
-        self.side_LI_reached_goal = LI_reached_goal.msg
 
     def human_input_callback(self, msg: Int32):
         self.human_input_received = True
