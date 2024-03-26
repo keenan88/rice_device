@@ -30,8 +30,6 @@ for flopper_row in pin_numbers:
     print()
 
 
-input()
-
 
 while 1:
     

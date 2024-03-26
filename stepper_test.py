@@ -4,39 +4,36 @@ import RPi.GPIO as GPIO
 
 usleep = lambda x: sleep(x/1000000.0)
 
-# right step: 23
-# right dir: 24
+GPIO.setmode(GPIO.BCM)
 
-# step left: 14
-# left direction: 15
+right_step_pin = 14
+right_dir_pin = 24
 
-right_step_pin = DigitalOutputDevice(pin = 23, active_high=True, initial_value=False)
-right_dir_pin = DigitalOutputDevice(pin = 24, active_high=True, initial_value=False)
+left_step_pin = 15
+left_dir_pin = 18
 
-left_step_pin = DigitalOutputDevice(pin = 14, active_high=True, initial_value=False)
-left_dir_pin = DigitalOutputDevice(pin = 15, active_high=True, initial_value=False)
+GPIO.setup(left_step_pin, GPIO.OUT)
+GPIO.setup(left_dir_pin, GPIO.OUT)
 
+GPIO.setup(right_step_pin, GPIO.OUT)
+GPIO.setup(right_dir_pin, GPIO.OUT)
 
-
-right_dir_pin.off()
-left_dir_pin.on()
-
-right_step_pin.off() 
-left_step_pin.off() 
+GPIO.output(left_dir_pin, GPIO.HIGH)
+GPIO.output(right_dir_pin, GPIO.LOW)
 
 sleep(1)
 
-if 1:
+while 1:
 
-    right_step_pin.on() 
-    usleep(20)
-    right_step_pin.off() 
-    usleep(20) # Minimum 1.9us low time, as per page 8 of drv8834 datasheet
+    GPIO.output(right_step_pin, GPIO.LOW)
+    usleep(1000)
+    GPIO.output(right_step_pin, GPIO.HIGH)
+    usleep(1000)
 
-    left_step_pin.on() 
-    usleep(20)
-    left_step_pin.off() 
-    usleep(20) # Minimum 1.9us low time, as per page 8 of drv8834 datasheet
+    GPIO.output(left_step_pin, GPIO.LOW)
+    usleep(1000)
+    GPIO.output(left_step_pin, GPIO.HIGH)
+    usleep(1000)
 
-    sleep(0.025)
+    sleep(0.5)
 

@@ -1,0 +1,10 @@
+# Request
+string desired_pos
+---
+
+# Result
+bool movement_time_completed
+
+# Feedback
+---
+bool in_motion

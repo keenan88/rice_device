@@ -10,14 +10,17 @@ left = 17
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(in1,GPIO.OUT)
 GPIO.setup(in2,GPIO.OUT)
+
 GPIO.setup(right,GPIO.OUT)
 GPIO.setup(center,GPIO.OUT)
 GPIO.setup(left,GPIO.OUT)
+
 GPIO.output(in1,GPIO.LOW)
 GPIO.output(in2,GPIO.LOW)
 r=GPIO.PWM(right,1000)
 c=GPIO.PWM(center,1000)
 l=GPIO.PWM(left,1000)
+
 
 r.start(0)
 c.start(0)
@@ -58,26 +61,26 @@ while(1):
 
     elif x=='l':
         print("low")
-        r.ChangeDutyCycle(25)
+        # r.ChangeDutyCycle(25)
         # c.ChangeDutyCycle(25)
         l.ChangeDutyCycle(25)
 
     elif x=='m':
         print("medium")
-        r.ChangeDutyCycle(50)
-        # c.ChangeDutyCycle(50)
+        r.ChangeDutyCycle(0)
+        c.ChangeDutyCycle(0)
         l.ChangeDutyCycle(50)
 
     elif x=='h':
         print("high")
-        r.ChangeDutyCycle(100)
+        # r.ChangeDutyCycle(100)
         # c.ChangeDutyCycle(100)
         l.ChangeDutyCycle(100)
      
     
     elif x=='e':
-        r.stop()
-        c.stop()
+        # r.stop()
+        # c.stop()
         l.stop()
         GPIO.cleanup()
         break

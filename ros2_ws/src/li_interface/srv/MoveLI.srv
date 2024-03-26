@@ -1,0 +1,3 @@
+string desired_pos
+---
+bool movement_time_completed

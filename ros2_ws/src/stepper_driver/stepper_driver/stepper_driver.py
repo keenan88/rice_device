@@ -16,30 +16,25 @@ class StepperDriver(Node):
     def __init__(self):
         super().__init__('Stepper_Driver')
 
-        self.wheel_horiz_offset_m = 0.1 # Need to validate this
-        self.wheel_radius_m = 101.8/1000/2
-        self.lin_max_meters_per_s = 0.15
+        self.wheel_horiz_offset_m = 0.125 + 3 / 1000 # Central shaft to motor hub face, motor hub face to center of wheels
+
+        self.wheel_radius_m = 49 / 1000 # 49mm radius wheels
+        self.lin_max_meters_per_s = 0.3
         self.ang_max_rad_per_s = pi / 2
 
         self.vel_sub = self.create_subscription(Twist, '/cmd_vel', self.set_motors_degrees_per_s, 10)
-        self.odom_publisher = self.create_publisher(Odometry, '/wheel_odom', 10)
-        self.odom_msg = Odometry()
-        self.odom_msg.header.frame_id = 'world'
-        self.odom_msg.child_frame_id = 'robot'
-        
+
         self.right_step_timer = self.create_timer(1, self.right_step_callback) 
         self.left_step_timer = self.create_timer(1, self.left_step_callback) 
 
         self.left_stopped = False
         self.right_stopped = False
 
-        self.right_step_pin = DigitalOutputDevice(pin = 23, active_high=True, initial_value=False)
+        self.right_step_pin = DigitalOutputDevice(pin = 14, active_high=True, initial_value=False)
         self.right_dir_pin = DigitalOutputDevice(pin = 24, active_high=True, initial_value=False)
 
-        self.left_step_pin = DigitalOutputDevice(pin = 14, active_high=True, initial_value=False)
-        self.left_dir_pin = DigitalOutputDevice(pin = 15, active_high=True, initial_value=False)
-
-        self.lps = 0
+        self.left_step_pin = DigitalOutputDevice(pin = 15, active_high=True, initial_value=False)
+        self.left_dir_pin = DigitalOutputDevice(pin = 18, active_high=True, initial_value=False)
 
         starting_velocity = Twist()
         self.set_motors_degrees_per_s(starting_velocity)
@@ -57,17 +52,6 @@ class StepperDriver(Node):
         if twist_msg.angular.z < -self.ang_max_rad_per_s:
             twist_msg.angular.z = -self.ang_max_rad_per_s
 
-        # It is a little cheesy to just take the prescribed velocity and assume that it is 100% correct
-        # However, steppers have no feedback, so this is about all we can do.
-        # We could try moving this to the stepper-stepping callbacks, but that is much more complex to
-        # Implement, and may not even be more accurate.
-        # More realistically, will see what the error is when moving around and use that in the covariance matrix.
-        curr_ns = self.get_clock().now().nanoseconds
-        self.odom_msg.header.stamp = Time(sec = int(curr_ns / 10e8), nanosec = int(curr_ns % 10e8))
-        self.odom_msg.twist.twist.linear.x = twist_msg.linear.x
-        self.odom_msg.twist.twist.angular.z = twist_msg.angular.z
-        self.odom_publisher.publish(self.odom_msg)
-
         linear_component_rad_per_s = twist_msg.linear.x / self.wheel_radius_m
         rotation_component_rad_per_s = twist_msg.angular.z * self.wheel_horiz_offset_m / self.wheel_radius_m 
 
@@ -78,7 +62,7 @@ class StepperDriver(Node):
         left_wheel_deg_per_s = left_wheel_rad_per_s * 180 / pi
 
         degrees_per_full_step = 1.8
-        step_size = 1/2
+        step_size = 1/4
         degrees_per_pulse = degrees_per_full_step * step_size
 
         right_pulses_per_s = right_wheel_deg_per_s / degrees_per_pulse
@@ -121,7 +105,6 @@ class StepperDriver(Node):
     def left_step_callback(self):
         
         if not self.left_stopped:
-            self.lps += 1
             self.left_step_pin.on()
             usleep(20) # Minimum 1.9us high time, as per page 8 of drv8834 datasheet
             self.left_step_pin.off() 
