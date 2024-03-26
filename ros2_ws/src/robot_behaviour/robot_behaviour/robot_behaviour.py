@@ -37,7 +37,7 @@ ROBOT_STATE_EXTEND_CENTRAL_FLOPPER_RAIL = Int32(data = 15)
 
 
 class Robot_Behaviour(Node):
-    def __init__(self, robot_behaviour = ROBOT_STATE_INIT_DO_NOTHING):
+    def __init__(self, robot_behaviour = ROBOT_STATE_INIT_ALL_UP):
         super().__init__('Robot_Behaviour')
         
         self.robot_behaviour_state = robot_behaviour
@@ -45,7 +45,7 @@ class Robot_Behaviour(Node):
         self.behaviour_state_timer = self.create_timer(1, self.update_robot_state)
 
         # Publishers to various subsystems
-        self.drive_publisher = self.create_publisher(Twist, '/robot_movement', 10)
+        self.drive_publisher = self.create_publisher(String, '/robot_movement', 10)
         self.robot_zeroer = self.create_publisher(Int32, '/zero_robot', 10)
 
         # Subscribers to various subsystems feedback
@@ -54,7 +54,7 @@ class Robot_Behaviour(Node):
         )   
 
         self.action_client = ActionClient(self, MoveLIAction, 'move_side_lis')
-        self.send_side_LI_goal("up")
+        
 
         self.human_input_subscriber = self.create_subscription(
             Int32, '/human_input', self.human_input_callback, 10
@@ -66,6 +66,7 @@ class Robot_Behaviour(Node):
 
         self.center_LI_in_motion = False
         self.side_LI_in_motion = False
+        self.side_LI_motion_initiated = False
 
         self.central_shaft_reached_goal = False
         self.human_input_received = False
@@ -75,6 +76,8 @@ class Robot_Behaviour(Node):
     def send_side_LI_goal(self, desired_pos):
         goal_msg = MoveLIAction.Goal()
         goal_msg.desired_pos = desired_pos
+
+        self.side_LI_in_motion = True
 
         self.action_client.wait_for_server()
 
@@ -104,8 +107,6 @@ class Robot_Behaviour(Node):
     def side_LI_feedback_cb(self, feedback_msg):
         feedback = feedback_msg.feedback
         self.side_LI_in_motion = feedback.in_motion
-        print("Got feedback: ", self.side_LI_in_motion)
-
 
 
     def tf_callback(msg):
@@ -137,24 +138,30 @@ class Robot_Behaviour(Node):
             self.drive_publisher.publish(drive_msg) # Assumed instantaneous change in wheel velocity
 
             # Bring all flopper rails up
-            moveDown = False
-            self.side_LI_publisher.publish(Bool(moveDown))
-            self.center_LI_publisher.publish(Bool(moveDown))
+            if not self.side_LI_motion_initiated:
+                self.side_LI_motion_initiated = True
+                self.send_side_LI_goal("up")
+
+            # TODO - move center flopper rails up
+            
 
             # Bring central shaft up
-            shaft_msg = String()
-            shaft_msg.data = "high"
-            self.central_shaft_publisher.publish(shaft_msg)
+            #shaft_msg = String()
+            #shaft_msg.data = "high"
+            #self.central_shaft_publisher.publish(shaft_msg)
 
             # Wait until all subsystems confirm complete movement
-            if self.center_LI_reached_goal and self.side_LI_reached_goal:
-                if self.central_shaft_reached_goal and self.human_input_received:
-                    self.robot_behaviour_state = ROBOT_STATE_INIT_CENTRAL_SHAFT_DOWN
-                    self.human_input_received = False
-                    self.central_shaft_reached_goal = False
-                    self.center_LI_reached_goal = False
-                    self.side_LI_reached_goal = False
-    
+            if not self.side_LI_in_motion:# and not self.center_LI_in_motion:
+                #if self.central_shaft_reached_goal and self.human_input_received:
+                print("DONE")
+                self.side_LI_motion_initiated = False
+                #self.robot_behaviour_state = ROBOT_STATE_INIT_CENTRAL_SHAFT_DOWN
+                while 1: pass
+                self.human_input_received = False
+                self.central_shaft_reached_goal = False
+                self.center_LI_reached_goal = False
+                self.side_LI_reached_goal = False
+
         elif self.robot_behaviour_state == ROBOT_STATE_INIT_CENTRAL_SHAFT_DOWN:
             
             shaft_msg = String()
