@@ -14,8 +14,6 @@ class LinearActuator(Node):
     def __init__(self):
         super().__init__('Linear_Actuator')
 
-        
-
         self.side_LI_movement_time_elapsed_s = 0
         self.center_LI_movement_time_elapsed_s = 0
 
@@ -23,30 +21,26 @@ class LinearActuator(Node):
         self.center_LI_in_motion = False
 
         # LA actions
-        self._action_server = ActionServer(
+        self.side_las_action_server = ActionServer(
             self,
             MoveLIAction,
             'move_side_lis',
-            self.execute_callback
+            self.side_las_callback
+        )
+
+        self.center_la_action_server = ActionServer(
+            self,
+            MoveLIAction,
+            'move_center_li',
+            self.center_la_callback
         )
         
-        timer_period_s = 1 / 1000
-        self.movement_time_length_s = 6
-        self.side_ms = 0
-        self.center_ms = 0
         self.la_move_time_s = 6
-
-        # Timers to give feedback after HE's have moved
-        self.sideTimer = self.create_timer(timer_period_s, self.increment_side_ms)
-        self.centerTimer = self.create_timer(timer_period_s, self.increment_center_ms)
-        
-        self.centerTimer.cancel()
-
-        self.isCenterMoving = False
 
         self.dutyCycle = 100
         
         # Pin Setup
+        # WARN - in1 and in2 contrl the direction of the linear actuators, and are SHARED resources
         self.in1 = 0
         self.in2 = 5
         self.right = 22
@@ -70,15 +64,8 @@ class LinearActuator(Node):
         self.centerLA.start(0)
         self.leftLA.start(0)
 
-    def increment_side_ms(self):
-        #self.side_ms += 1
-        pass
-
-    def increment_center_ms(self):
-        self.center_ms += 1
-
-    def execute_callback(self, goal_handle):
-        self.get_logger().info('Executing goal...')
+    def side_las_callback(self, goal_handle):
+        self.get_logger().info('Executing side goal...')
 
         # Start movement
         self.rightLA.ChangeDutyCycle(self.dutyCycle)
@@ -99,12 +86,11 @@ class LinearActuator(Node):
 
             start_time_s = self.get_clock().now().nanoseconds / 1e9
             curr_time_s = start_time_s
-            print(start_time_s)
 
             while curr_time_s - start_time_s < self.la_move_time_s:
                 goal_handle.publish_feedback(feedback_msg)
                 curr_time_s = self.get_clock().now().nanoseconds / 1e9
-                print(curr_time_s - start_time_s)
+
             
             result.movement_time_completed = True
             goal_handle.succeed()
@@ -119,17 +105,43 @@ class LinearActuator(Node):
         
         return result
 
-    def start_center_LA_move(self, moveDown):
-        self.centerTimer.reset()
-        self.stop_all()
+    def center_la_callback(self, goal_handle):
+        self.get_logger().info('Executing center goal...')
+
+        # Start movement
         self.centerLA.ChangeDutyCycle(self.dutyCycle)
 
-        if moveDown.data:
+        if goal_handle.request.desired_pos == "down":
             GPIO.output(self.in1,GPIO.HIGH)
             GPIO.output(self.in2,GPIO.LOW)
-        else:
+        elif goal_handle.request.desired_pos == "up":
             GPIO.output(self.in1,GPIO.LOW)
             GPIO.output(self.in2,GPIO.HIGH)
+
+        result = MoveLIAction.Result()
+
+        if goal_handle.request.desired_pos in ["down", "up"]:
+            feedback_msg = MoveLIAction.Feedback()
+            feedback_msg.in_motion = True
+
+            start_time_s = self.get_clock().now().nanoseconds / 1e9
+            curr_time_s = start_time_s
+
+            while curr_time_s - start_time_s < self.la_move_time_s:
+                goal_handle.publish_feedback(feedback_msg)
+                curr_time_s = self.get_clock().now().nanoseconds / 1e9
+            
+            result.movement_time_completed = True
+            goal_handle.succeed()
+
+            # Stop after movement
+            self.centerLA.ChangeDutyCycle(0)
+
+        else:
+            result.movement_time_completed = False
+            goal_handle.abort()
+        
+        return result
         
     def stop_all(self):
         self.rightLA.ChangeDutyCycle(0)
