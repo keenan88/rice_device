@@ -56,6 +56,8 @@ class Robot_Behaviour(Node):
         self.side_li_action_client = ActionClient(self, MoveLIAction, 'move_side_lis')
 
         self.center_li_action_client = ActionClient(self, MoveLIAction, 'move_center_li')
+
+        self.central_shaft_action_client = ActionClient(self, MoveLIAction, 'move_central_shaft')
         
 
         self.human_input_subscriber = self.create_subscription(
@@ -72,11 +74,15 @@ class Robot_Behaviour(Node):
         self.side_LI_in_motion = False
         self.side_LI_motion_initiated = False
 
+        self.central_shaft_motion_initiated = False
+        self.central_shaft_in_motion = False
+
         self.central_shaft_reached_goal = False
         self.human_input_received = False
 
         self.robot_odom = Odometry()
 
+    # Side Flopper Rail Action Client
     def send_side_LI_goal(self, desired_pos):
         goal_msg = MoveLIAction.Goal()
         goal_msg.desired_pos = desired_pos
@@ -110,6 +116,7 @@ class Robot_Behaviour(Node):
         feedback = feedback_msg.feedback
         self.side_LI_in_motion = feedback.in_motion
 
+    # Center Flopper Rail Action Client
     def send_center_LI_goal(self, desired_pos):
         goal_msg = MoveLIAction.Goal()
         goal_msg.desired_pos = desired_pos
@@ -142,11 +149,41 @@ class Robot_Behaviour(Node):
     def center_LI_feedback_cb(self, feedback_msg):
         feedback = feedback_msg.feedback
         self.center_LI_in_motion = feedback.in_motion
+    
+    # Central Shaft Action Client
+    def send_central_shaft_goal(self, desired_pos):
+        goal_msg = MoveLIAction.Goal()
+        goal_msg.desired_pos = desired_pos
 
-    def tf_callback(msg):
-    # Callback function to handle TF messages
-        print("Received TF message:")
-        print(msg)
+        self.central_shaft_in_motion = True
+
+        self.central_shaft_action_client.wait_for_server()
+
+        self.center_goal_future = self.central_shaft_action_client.send_goal_async(goal_msg, feedback_callback = self.central_shaft_feedback_cb)
+
+        self.center_goal_future.add_done_callback(self.central_shaft_response_cb)
+
+    def central_shaft_response_cb(self, future):
+        goal_handle = future.result()
+        if not goal_handle.accepted:
+            self.get_logger().info('central shaft Goal rejected :(')
+            return
+
+        self.get_logger().info('central shaft Goal accepted :)')
+
+        self.get_result_future = goal_handle.get_result_async()
+        self.get_result_future.add_done_callback(self.central_shaft_result_cb)
+
+    def central_shaft_result_cb(self, future):
+        result = future.result().result
+        self.get_logger().info('Center Result: {0}'.format(result.movement_time_completed))
+
+        self.central_shaft_in_motion = not result.movement_time_completed
+
+    def central_shaft_feedback_cb(self, feedback_msg):
+        feedback = feedback_msg.feedback
+        self.central_shaft_in_motion = feedback.in_motion
+
 
     def human_input_callback(self, msg: Int32):
         self.human_input_received = True
@@ -179,6 +216,10 @@ class Robot_Behaviour(Node):
             if not self.center_LI_motion_initiated:
                 self.center_LI_motion_initiated = True
                 self.send_center_LI_goal("up")
+
+            if not self.central_shaft_motion_initiated:
+                self.central_shaft_motion_initiated = True
+                self.send_central_shaft_goal("above_wheels")
         
 
             # Bring central shaft up
@@ -187,7 +228,7 @@ class Robot_Behaviour(Node):
             #self.central_shaft_publisher.publish(shaft_msg)
 
             # Wait until all subsystems confirm complete movement
-            if not self.side_LI_in_motion:# and not self.center_LI_in_motion:
+            if not self.central_shaft_in_motion:# and not self.center_LI_in_motion:
                 #if self.central_shaft_reached_goal and self.human_input_received:
                 print("DONE")
                 self.side_LI_motion_initiated = False
