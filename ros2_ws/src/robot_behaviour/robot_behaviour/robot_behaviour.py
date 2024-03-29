@@ -11,8 +11,6 @@ from rclpy.action import ActionClient
 ROBOT_STATE_INIT_DO_NOTHING = Int32(data = 16)
 ROBOT_STATE_INIT_ALL_UP = Int32(data = 0)
 ROBOT_STATE_INIT_OUTSIDE_RAILS_DOWN = Int32(data = 2)
-ROBOT_STATE_INIT_CENTRAL_SHAFT_UP = Int32(data = 3)
-ROBOT_STATE_INIT_CENTER_RAIL_DOWN = Int32(data = 4)
 
 ROBOT_STATE_INITIALIZE = Int32(data = 5)
 
@@ -247,46 +245,13 @@ class Robot_Behaviour(Node):
                 self.side_LI_reached_goal = False
 
                 self.robot_behaviour_state = ROBOT_STATE_INIT_CENTRAL_SHAFT_UP
-                while 1: pass
-                
-            
-        elif self.robot_behaviour_state == ROBOT_STATE_INIT_CENTRAL_SHAFT_UP:
-
-            shaft_msg = String()
-            shaft_msg.data = "high"
-            self.central_shaft_publisher.publish(shaft_msg)
-                
-            if self.human_input_received and self.central_shaft_reached_goal:
-                self.robot_behaviour_state = ROBOT_STATE_INIT_CENTER_RAIL_DOWN
-                self.human_input_received = False
-                self.central_shaft_reached_goal = False
-
-        elif self.robot_behaviour_state == ROBOT_STATE_INIT_CENTER_RAIL_DOWN:
-            
-            moveDown = False
-            rail_msg = Bool()
-            rail_msg.data = moveDown
-            self.center_LI_publisher.publish(rail_msg)
-
-            if self.human_input_received and self.center_LI_reached_goal:
-                self.robot_behaviour_state = ROBOT_STATE_INITIALIZE
-                self.human_input_received = False
-                self.center_LI_reached_goal = False
-            
-        
-        elif self.robot_behaviour_state == ROBOT_STATE_INITIALIZE:
-            trigger_zero_msg = Int32()
-            self.robot_zeroer.publish(trigger_zero_msg) # Zero robot
-
-            if self.human_input_received:
-                self.robot_behaviour_state = ROBOT_STATE_FULL_SPEED
-                self.within_hole_threshold = False
-                self.human_input_received = False
 
         elif self.robot_behaviour_state == ROBOT_STATE_FULL_SPEED:
             speed_msg = String()
             speed_msg.data = "full_speed"
             self.drive_publisher.publish(speed_msg)
+
+            self.within_final_hex_transition = False # Change to call to localization
             
             if self.within_final_hex_transition:
                 self.robot_behaviour_state = ROBOT_STATE_LINEUP_CENTRAL_SHAFT
