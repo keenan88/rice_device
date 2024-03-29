@@ -61,26 +61,26 @@ while(1):
 
     elif x=='l':
         print("low")
-        # r.ChangeDutyCycle(25)
-        # c.ChangeDutyCycle(25)
+        r.ChangeDutyCycle(25)
+        c.ChangeDutyCycle(25)
         l.ChangeDutyCycle(25)
 
     elif x=='m':
         print("medium")
-        r.ChangeDutyCycle(0)
-        c.ChangeDutyCycle(0)
+        r.ChangeDutyCycle(50)
+        c.ChangeDutyCycle(50)
         l.ChangeDutyCycle(50)
 
     elif x=='h':
         print("high")
-        # r.ChangeDutyCycle(100)
-        # c.ChangeDutyCycle(100)
+        r.ChangeDutyCycle(100)
+        c.ChangeDutyCycle(100)
         l.ChangeDutyCycle(100)
      
     
     elif x=='e':
-        # r.stop()
-        # c.stop()
+        r.stop()
+        c.stop()
         l.stop()
         GPIO.cleanup()
         break

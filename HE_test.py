@@ -7,11 +7,15 @@ usleep = lambda x: sleep(x/1000000.0)
 # Each sub vector is ordered L, C, R
 # First vector is first row, second vector is second row, etc.
 pin_numbers = [
-    [19, 20, 8],
-    [26, 16, 7],
-    [6, 21, 25],
-    [13, 12, 23]
+    [6, 26, 23],
+    [12, -1, 25],
+    [13, 19, 8],
+    [14, 21, 7]
 ]
+
+
+# 20 and 16
+
 
 GPIO.setmode(GPIO.BCM)
 
@@ -19,25 +23,26 @@ for flopper_row in pin_numbers:
 
     for pin_num in flopper_row:
         # Ensure all pins have no residual voltage on their lines.
-        GPIO.setup(pin_num, GPIO.OUT)
-        GPIO.output(pin_num, GPIO.LOW)
+        #GPIO.setup(pin_num, GPIO.OUT)
+        #GPIO.output(pin_num, GPIO.LOW)
 
         # Setup HE pin to read
-        GPIO.setup(pin_num, GPIO.IN)
+        if pin_num != -1:
+            GPIO.setup(pin_num, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
         
         print(pin_num)
 
     print()
-
-
 
 while 1:
     
     for flopper_row in pin_numbers:
 
         for pin_num in flopper_row:
-
-            print(GPIO.input(pin_num), end=', ')
+            if pin_num != -1:
+                print(GPIO.input(pin_num), end=', ')
+            else:
+                print("-1", end=', ')
 
         print()
 

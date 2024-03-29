@@ -1,4 +1,4 @@
-from gpiozero import DigitalOutputDevice
+#from gpiozero import DigitalOutputDevice
 from time import sleep
 import RPi.GPIO as GPIO
 
@@ -6,8 +6,9 @@ usleep = lambda x: sleep(x/1000000.0)
 
 GPIO.setmode(GPIO.BCM)
 
-right_step_pin = 14
-right_dir_pin = 24
+
+right_step_pin = 24
+right_dir_pin = 20
 
 left_step_pin = 15
 left_dir_pin = 18

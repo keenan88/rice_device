@@ -1,9 +1,0 @@
-digraph G {
-"world" -> "robot_central_shaft"[label=" Broadcaster: default_authority\nAverage rate: 10.196\nBuffer length: 5.1\nMost recent transform: 1710985674.116301\nOldest transform: 1710985669.016075\n"];
-"world" -> "farm_hole_1"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
-"world" -> "farm_hole_2"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
-edge [style=invis];
- subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
-"Recorded at time: 1710985674.1573539"[ shape=plaintext ] ;
-}->"world";
-}

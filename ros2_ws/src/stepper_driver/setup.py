@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'stepper_driver_exe = stepper_driver.stepper_driver:main'
         ],
     },
 )

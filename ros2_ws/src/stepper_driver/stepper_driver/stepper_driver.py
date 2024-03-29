@@ -30,8 +30,8 @@ class StepperDriver(Node):
         self.left_stopped = False
         self.right_stopped = False
 
-        self.right_step_pin = DigitalOutputDevice(pin = 14, active_high=True, initial_value=False)
-        self.right_dir_pin = DigitalOutputDevice(pin = 24, active_high=True, initial_value=False)
+        self.right_step_pin = DigitalOutputDevice(pin = 24, active_high=True, initial_value=False)
+        self.right_dir_pin = DigitalOutputDevice(pin = 20, active_high=True, initial_value=False)
 
         self.left_step_pin = DigitalOutputDevice(pin = 15, active_high=True, initial_value=False)
         self.left_dir_pin = DigitalOutputDevice(pin = 18, active_high=True, initial_value=False)
