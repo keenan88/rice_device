@@ -18,14 +18,10 @@ class CentralShaft(Node):
     def __init__(self):
         super().__init__('Central_Shaft')
         # Publishers
-        # self.buttonPublisher = self.create_publisher(Bool, '/central_shaft_button', 10)
+        self.buttonPublisher = self.create_publisher(Bool, '/central_shaft_button', 10)
 
-        # button_timer_period = 0.5
-        # self.timer = self.create_timer(button_timer_period, self.button_callback)
-
-        #self.centralShaftPublisher = self.create_publisher(Bool, '/central_shaft_status', 10)
-        #central_shaft_timer_period = 0.5
-        #self.timer = self.create_timer(central_shaft_timer_period, self.central_shaft_status_callback)
+        button_timer_period = 0.5
+        self.timer = self.create_timer(button_timer_period, self.button_callback)
 
         self.central_shaft_server = ActionServer(
             self,
@@ -34,20 +30,8 @@ class CentralShaft(Node):
             self.central_shaft_cb
         )
 
-        # # Subscribers
-        # self.subCommand = self.create_subscription(
-        #     String, 
-        #     '/central_shaft_command', 
-        #     self.commandCallback, 
-        #     10)
-        # self.subCommand  # prevent unused variable warning
-
         # Setup
         self.dutyCycle = 25
-
-        # Main Loop
-        # control_timer_period = 0.001
-        # self.control_timer = self.create_timer(control_timer_period, self.moveLA)
 
         # Pins
         self.in1 = 10
@@ -168,6 +152,11 @@ class CentralShaft(Node):
         self.la.ChangeDutyCycle(0)
         GPIO.output(self.in1,GPIO.LOW)
         GPIO.output(self.in2,GPIO.LOW)
+
+    def button_callback(self):
+        msg = Bool()
+        msg.data = self.button.is_pressed
+        self.buttonPublisher.publish(msg)
 
 
 
