@@ -1,3 +1,4 @@
 string desired_pos
+int32 completion_time_s
 ---
 bool movement_time_completed

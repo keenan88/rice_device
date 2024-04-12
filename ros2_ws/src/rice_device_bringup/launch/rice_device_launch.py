@@ -16,6 +16,11 @@ def generate_launch_description():
         Node(
             package='stepper_driver',
             executable='stepper_driver_exe',
+        ),
+
+        Node(
+            package='locomotion',
+            executable = 'locomotion_exe'
         )
 
     ])

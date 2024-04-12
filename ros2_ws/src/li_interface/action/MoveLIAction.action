@@ -1,5 +1,6 @@
 # Request
 string desired_pos
+int32 movement_time_s
 ---
 
 # Result

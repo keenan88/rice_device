@@ -34,15 +34,13 @@ class LinearActuator(Node):
             'move_center_li',
             self.center_la_callback
         )
-        
-        self.la_move_time_s = 6
-
+    
         self.dutyCycle = 100
         
         # Pin Setup
         # WARN - in1 and in2 contrl the direction of the linear actuators, and are SHARED resources
         self.in1 = 0
-        self.in2 = 5
+        self.in2 = 1
         self.right = 22
         self.center = 27
         self.left = 17
@@ -55,6 +53,7 @@ class LinearActuator(Node):
         GPIO.setup(self.left,GPIO.OUT)
         GPIO.output(self.in1,GPIO.LOW)
         GPIO.output(self.in2,GPIO.LOW)
+
         self.rightLA = GPIO.PWM(self.right,1000)
         self.centerLA = GPIO.PWM(self.center,1000)
         self.leftLA = GPIO.PWM(self.left,1000)
@@ -65,11 +64,14 @@ class LinearActuator(Node):
         self.leftLA.start(0)
 
     def side_las_callback(self, goal_handle):
-        self.get_logger().info('Executing side goal...')
-
+        #self.get_logger().info('Executing side goal...')
+#asdf
         # Start movement
         self.rightLA.ChangeDutyCycle(self.dutyCycle)
         self.leftLA.ChangeDutyCycle(self.dutyCycle)
+
+        la_move_time_s = goal_handle.request.movement_time_s
+        
 
         if goal_handle.request.desired_pos == "down":
             GPIO.output(self.in1,GPIO.HIGH)
@@ -87,7 +89,7 @@ class LinearActuator(Node):
             start_time_s = self.get_clock().now().nanoseconds / 1e9
             curr_time_s = start_time_s
 
-            while curr_time_s - start_time_s < self.la_move_time_s:
+            while curr_time_s - start_time_s < la_move_time_s:
                 goal_handle.publish_feedback(feedback_msg)
                 curr_time_s = self.get_clock().now().nanoseconds / 1e9
 
@@ -106,10 +108,12 @@ class LinearActuator(Node):
         return result
 
     def center_la_callback(self, goal_handle):
-        self.get_logger().info('Executing center goal...')
+        #self.get_logger().info('Executing center goal...')
 
         # Start movement
         self.centerLA.ChangeDutyCycle(self.dutyCycle)
+
+        la_move_time_s = goal_handle.request.movement_time_s
 
         if goal_handle.request.desired_pos == "down":
             GPIO.output(self.in1,GPIO.HIGH)
@@ -127,7 +131,7 @@ class LinearActuator(Node):
             start_time_s = self.get_clock().now().nanoseconds / 1e9
             curr_time_s = start_time_s
 
-            while curr_time_s - start_time_s < self.la_move_time_s:
+            while curr_time_s - start_time_s < la_move_time_s:
                 goal_handle.publish_feedback(feedback_msg)
                 curr_time_s = self.get_clock().now().nanoseconds / 1e9
             

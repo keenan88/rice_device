@@ -39,16 +39,19 @@ class CentralShaft(Node):
         self.laPin = 4
         self.buttonPin = 11
 
-        self.upperbound = 17600
-        self.lowerbound = 500
-
-        self.topPosition = 500
-        self.aboveWheels = 5000
-        self.farmPosition = 16000
-        self.holePosition = 17000
-
+        self.max_extension = 17600
+        self.min_extension = 500
         self.threshold = 200
-        self.targetPos = self.topPosition
+
+        self.positions = {
+            "high": self.min_extension + self.threshold, 
+            "above_wheels": 5000,
+            "touching_farm": 8300, 
+            "in_hole": 16500
+            
+        }
+
+        self.targetPos = self.positions['high']
         self.reachedPos = True
 
         # Setup
@@ -75,76 +78,81 @@ class CentralShaft(Node):
 
         result = MoveLIAction.Result()
 
-        if goal_handle.request.desired_pos in ["high", "touching_farm", "in_hole", "above_wheels"] and self.reachedPos:
+        # Validate given position
+        # Validate that not in motion
+        if goal_handle.request.desired_pos in self.positions.keys() and self.reachedPos:
+            self.get_logger().info('Central shaft request in execution')
 
             self.reachedPos = False
 
             desired_pos = goal_handle.request.desired_pos
-            if (desired_pos == 'high'):
-                self.targetPos = self.topPosition
-                self.reachedPos = False
-            elif (desired_pos == 'touching_farm'):
-                self.targetPos = self.farmPosition
-                self.reachedPos = False
-            elif (desired_pos == 'in_hole'):
-                self.targetPos = self.holePosition
-                self.reachedPos = False
-            elif (desired_pos == "above_wheels"):
-                self.targetPos = self.aboveWheels
-                self.reachedPos = False
+            self.targetPos = self.positions[desired_pos]
 
             feedback_msg = MoveLIAction.Feedback()
             feedback_msg.in_motion = True
+
+            # Configure hardware to move central shaft in desired direction
+            if self.pot.value < self.targetPos:
+                if self.pot.value < self.max_extension and not self.button.is_pressed:
+                    GPIO.output(self.in1,GPIO.HIGH)
+                    GPIO.output(self.in2,GPIO.LOW)
+                else:
+                    GPIO.output(self.in1,GPIO.LOW)
+                    GPIO.output(self.in2,GPIO.LOW)
+
+            elif self.pot.value > self.targetPos:
+                if self.pot.value > self.min_extension:
+                    GPIO.output(self.in1,GPIO.LOW)
+                    GPIO.output(self.in2,GPIO.HIGH)
+                else:
+                    GPIO.output(self.in1,GPIO.LOW)
+                    GPIO.output(self.in2,GPIO.LOW)
+            else:
+                GPIO.output(self.in1,GPIO.LOW)
+                GPIO.output(self.in2,GPIO.LOW)
 
             while not self.reachedPos:
                 
                 goal_handle.publish_feedback(feedback_msg)
 
-                print(self.pot.value, self.targetPos)
+                self.get_logger().info('Central shaft position: %d, Button value: %d' % (self.pot.value, self.button.is_pressed))
 
-                if self.pot.value < self.targetPos:
-                    if self.pot.value < self.upperbound and not self.button.is_pressed:
-                        GPIO.output(self.in1,GPIO.HIGH)
-                        GPIO.output(self.in2,GPIO.LOW)
+                # Stop if position reached
+                if abs(self.pot.value - self.targetPos) <= self.threshold: 
+                    if desired_pos != "touching_farm": # Let the touching farm case run until button is engaged with farm
+                        self.get_logger().info('Central shaft within threshold of target position')
+
+                        self.reachedPos = True
+
+                # Stop if we have button press
+                elif self.button.is_pressed and self.targetPos >= self.pot.value: # Button pressed while going down
+                    if desired_pos == "touching_farm": # This is the success case for touching the farm
+                        self.reachedPos = True
                     else:
-                        GPIO.output(self.in1,GPIO.LOW)
-                        GPIO.output(self.in2,GPIO.LOW)
+                        self.reachedPos = False # Any other case that ends in button press is a fail
+                        break
 
-                elif self.pot.value > self.targetPos:
-                    if self.pot.value > self.lowerbound:
-                        GPIO.output(self.in1,GPIO.LOW)
-                        GPIO.output(self.in2,GPIO.HIGH)
-                    else:
-                        GPIO.output(self.in1,GPIO.LOW)
-                        GPIO.output(self.in2,GPIO.LOW)
-                else:
-                    GPIO.output(self.in1,GPIO.LOW)
-                    GPIO.output(self.in2,GPIO.LOW)
+                else: # Stop if past min/max extension
+                    past_max = (self.pot.value >= self.max_extension - self.threshold and self.targetPos >= self.max_extension)
+                    past_min = (self.pot.value <= self.min_extension + self.threshold and self.targetPos <= self.min_extension)
+                    if past_max or past_min:
+                        self.reachedPos = True
+                        if past_min: self.get_logger().info('Central shaft at min extension')
+                        if past_max: self.get_logger().info('Central shaft at max extension')
+                        
 
-                # Check if reached
-                if abs(self.pot.value - self.targetPos) <= self.threshold:
-                    print("within threshold")
-                    self.reachedPos = True
-                    GPIO.output(self.in1,GPIO.LOW)
-                    GPIO.output(self.in2,GPIO.LOW)
+            # Stop movement
+            GPIO.output(self.in1,GPIO.LOW)
+            GPIO.output(self.in2,GPIO.LOW)
 
-                past_upper = (self.pot.value >= self.upperbound - self.threshold and self.targetPos >= self.upperbound)
-                past_lower = (self.pot.value <= self.lowerbound + self.threshold and self.targetPos <= self.lowerbound)
-
-                if past_upper or past_lower:
-                    if past_upper: print("below upper")
-                    if past_lower: print("below lower")
-                    # print('limit reached', upperbound, lowerbound, button.is_pressed)
-                    self.reachedPos = True
-                    GPIO.output(self.in1,GPIO.LOW)
-                    GPIO.output(self.in2,GPIO.LOW)
-
-            result.movement_time_completed = True
+            result.movement_time_completed = self.reachedPos
             goal_handle.succeed()
 
         else:
             result.movement_time_completed = False
             goal_handle.abort()
+
+        self.reachedPos = True # Not part of the return, just necessary so that the next call to the server is allowed in
         
         return result
 

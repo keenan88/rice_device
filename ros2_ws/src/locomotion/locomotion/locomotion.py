@@ -1,31 +1,15 @@
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Int32
+from std_msgs.msg import Int32, String
 from geometry_msgs.msg import Twist
 from math import pi
 import sys
 from nav_msgs.msg import Odometry
 
 
-sys.path.append("/home/keenan/Documents/rice_device/ros2_ws/src/robot_behaviour/robot_behaviour")
-
-from robot_behaviour import \
-    ROBOT_STATE_INITIALIZE, \
-    ROBOT_STATE_FULL_SPEED, \
-    ROBOT_STATE_LINEUP_CENTRAL_SHAFT, \
-    ROBOT_STATE_STOP, \
-    ROBOT_STATE_RETRACT_CENTRAL_FLOPPER_RAIL, \
-    ROBOT_STATE_EXTEND_CENTRAL_SHAFT, \
-    ROBOT_STATE_RETRACT_SIDE_FLOPPER_RAILS, \
-    ROBOT_STATE_TURN_180, \
-    ROBOT_STATE_EXTEND_SIDE_FLOPPER_RAILS, \
-    ROBOT_STATE_RETRACT_CENTRAL_SHAFT,  \
-    ROBOT_STATE_EXTEND_CENTRAL_FLOPPER_RAIL
-
-
 class Locomotion(Node):
 
-    def __init__(self, robot_behaviour = ROBOT_STATE_INITIALIZE):
+    def __init__(self):
         super().__init__('Locomotion')
 
         self.got_new_behaviour_state = False
@@ -64,7 +48,6 @@ class Locomotion(Node):
                 'Robot Velocity Changed to: Vx: %.2f, Vy: %.2f, Vz: %.2f' % 
                 (robot_vel.linear.x, robot_vel.linear.y, robot_vel.linear.z) 
                 + ' ' + 'Wx: %.2f, Wy: %.2f, Wz: %.2f' % (robot_vel.angular.x, robot_vel.angular.y, robot_vel.angular.z)
-                + ' ' + 'Robot Behaviour State: %d' % self.robot_behaviour_state.data
             )
 
             self.robot_speed_publisher.publish(robot_vel)

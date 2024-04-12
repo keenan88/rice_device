@@ -8,7 +8,7 @@ usleep = lambda x: sleep(x/1000000.0)
 # First vector is first row, second vector is second row, etc.
 pin_numbers = [
     [6, 26, 23],
-    [12, -1, 25],
+    [12, 5, 25],
     [13, 19, 8],
     [14, 21, 7]
 ]
