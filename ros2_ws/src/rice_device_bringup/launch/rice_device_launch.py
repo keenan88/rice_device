@@ -21,6 +21,13 @@ def generate_launch_description():
         Node(
             package='locomotion',
             executable = 'locomotion_exe'
-        )
+        ),
+
+        Node(
+            package='flopper_localization',
+            executable = 'flopper_localization_exe'
+        ),
+
+
 
     ])

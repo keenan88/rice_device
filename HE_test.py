@@ -23,8 +23,8 @@ for flopper_row in pin_numbers:
 
     for pin_num in flopper_row:
         # Ensure all pins have no residual voltage on their lines.
-        #GPIO.setup(pin_num, GPIO.OUT)
-        #GPIO.output(pin_num, GPIO.LOW)
+        GPIO.setup(pin_num, GPIO.OUT)
+        GPIO.output(pin_num, GPIO.LOW)
 
         # Setup HE pin to read
         if pin_num != -1:

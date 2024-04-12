@@ -14,8 +14,8 @@ class Locomotion(Node):
 
         self.got_new_behaviour_state = False
 
-        self.high_speed_m_per_s = 0.1
-        self.low_speed_m_per_s = 0.025
+        self.high_speed_m_per_s = 0.125
+        self.low_speed_m_per_s = 0.01
 
         self.turning_speed_rad_per_s = 2 * 3.1415 / 10
 

@@ -38,7 +38,7 @@ class Flopper_Localizer(Node):
 
             [
                 [0, 1, 0],
-                [1, 0, 1],
+                [1, 1, 1],
                 [1, 0, 1],
                 [1, 1, 1]
             ]
@@ -53,7 +53,9 @@ class Flopper_Localizer(Node):
 
         self.localizer_state = "on"
 
+
         self.curr_state_idx = 0
+        self.last_state_idx = 0
 
         self.create_timer(0.1, self.update_flopper_localization_state)
 
@@ -77,14 +79,21 @@ class Flopper_Localizer(Node):
         # ROS2 communication
         self.last_hex_flag_publisher = self.create_publisher(Int32, 'last_hex_flag', 10)
 
-        self.localization_state_subscriber = self.create_subscription(Int32, 'flopper_localization_state', self.update_localization_state, 10)
+        self.localization_state_subscriber = self.create_subscription(String, '/flopper_localizer_state', self.update_localization_state, 10)
 
 
     # Reading from hardware and extracting state done in same callback for now, easier for synchronization
     def update_flopper_localization_state(self):
+
+        if self.last_state_idx != self.curr_state_idx:
+            self.get_logger().info('Flopper state updated from %d to %d' % (self.last_state_idx, self.curr_state_idx))
+            self.last_state_idx = self.curr_state_idx
+        
+
         if self.localizer_state == "reset":
             self.curr_state_idx = 0
             self.localizer_state = "on"
+            
 
         if self.localizer_state == "on":
             for flopper_row_idx in range(len(self.pin_numbers)):
@@ -94,14 +103,12 @@ class Flopper_Localizer(Node):
                 for pin_num in flopper_row:
                     if pin_num != -1:
                         self.sensors_states[flopper_row_idx][pin_num_idx] = GPIO.input(pin_num)
-                        #print(GPIO.input(pin_num), end=', ')
+                        
                     else:
                         pass
                         print("-1", end=', ')
 
                     pin_num_idx += 1
-
-                print()
 
             same_states_cnt = 0
 
@@ -116,21 +123,26 @@ class Flopper_Localizer(Node):
                     if sensor_state == expected_pin_state:
                         same_states_cnt += 1
 
-            if same_states_cnt >= 11:
+            #self.get_logger().info('floppers in next position %d' % same_states_cnt)            
+
+            if same_states_cnt >= 10:
                 self.curr_state_idx = self.curr_state_idx + 1
 
-            print("Current state:", self.curr_state_idx)
+            
 
-            if self.curr_state_idx == 3:
-                last_hex_flag = Int32(1)
-                self.flopper_state_publisher.publish(last_hex_flag)
+            if self.curr_state_idx == len(self.states) - 1:
+                last_hex_flag = Int32()
+                last_hex_flag.data = 1
+                self.last_hex_flag_publisher.publish(last_hex_flag)
 
+                self.localizer_state = 'off'
 
-            print()
-            print()
 
     def update_localization_state(self, msg: String):
+        old_state = self.localizer_state
         self.localizer_state = msg.data
+        self.get_logger().info('localizer state change from %s to %s' % (old_state, self.localizer_state))
+        
 
 
 

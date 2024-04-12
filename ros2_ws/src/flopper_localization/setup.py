@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'flopper_localization_exe = flopper_localization.flopper_localization:main',
         ],
     },
 )

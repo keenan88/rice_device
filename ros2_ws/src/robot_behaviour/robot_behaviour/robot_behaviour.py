@@ -7,6 +7,7 @@ from std_msgs.msg import Bool, Int32
 from geometry_msgs.msg import Twist
 from li_interface.action import MoveLIAction
 from rclpy.action import ActionClient
+from time import sleep
 
 ROBOT_STATE_INIT_DO_NOTHING = Int32(data = 0)
 ROBOT_STATE_INIT_ALL_UP = Int32(data = 1)
@@ -16,10 +17,13 @@ ROBOT_STATE_INIT_OUTSIDE_RAILS_DOWN = Int32(data = 4)
 ROBOT_STATE_INIT_CENTRAL_SHAFT_UP_2 = Int32(data = 5)
 ROBOT_STATE_INIT_INNER_RAIL_DOWN = Int32(data = 16)
 
+DEBUG_CONVENVIENCE_STATE = Int32(data=18)
+
 
 # LINEAR & LINEUP
 
 ROBOT_STATE_FULL_SPEED = Int32(data = 6)
+ROBOT_STATE_LOWER_CENTRAL_SHAFT_TO_FARM = Int32(data = 17)
 ROBOT_STATE_LINEUP_CENTRAL_SHAFT = Int32(data = 7)
 ROBOT_STATE_STOP = Int32(data = 8)
 
@@ -36,7 +40,7 @@ ROBOT_STATE_EXTEND_CENTRAL_FLOPPER_RAIL = Int32(data = 15)
 
 
 class Robot_Behaviour(Node):
-    def __init__(self, robot_behaviour = ROBOT_STATE_INIT_INNER_RAIL_DOWN):
+    def __init__(self, robot_behaviour = DEBUG_CONVENVIENCE_STATE):
         super().__init__('Robot_Behaviour')
         
         self.robot_behaviour_state = robot_behaviour
@@ -60,28 +64,33 @@ class Robot_Behaviour(Node):
 
         # Subscriber and publisher to flopper localization
         self.last_hex_flag_subscriber = self.create_subscription(Int32, 'last_hex_flag', self.update_last_hex_flag, 10)
-        self.flopper_localizer_publisher = self.create_publisher(String, 'flopper_localizer', 10)
-
+        self.flopper_localizer_publisher = self.create_publisher(String, '/flopper_localizer_state', 10)
+        
         # Locmotion states
         self.drive_speed_sent = False
 
-        # States of central shaft and flopper LAs
+        # States of flopper LAs
         self.center_LI_in_motion = False
         self.center_LI_motion_initiated = False
 
         self.side_LI_in_motion = False
         self.side_LI_motion_initiated = False
 
+        # Central shaft states
         self.central_shaft_motion_initiated = False
         self.central_shaft_in_motion = False
-
         self.central_shaft_reached_goal = False
+
+
         self.human_input_received = False
 
         # States of localization
         self.within_hole_threshold = False
         self.within_final_hex_transition = False
         self.within_turn_completion_threshold = False
+        self.flopper_localizer_state_sent = False
+
+        
 
 
 
@@ -152,6 +161,7 @@ class Robot_Behaviour(Node):
         goal_msg.desired_pos = desired_pos
 
         self.central_shaft_in_motion = True
+        self.central_shaft_reached_goal = False
         self.central_shaft_action_client.wait_for_server()
         self.center_goal_future = self.central_shaft_action_client.send_goal_async(goal_msg, feedback_callback = self.central_shaft_feedback_cb)
         self.center_goal_future.add_done_callback(self.central_shaft_response_cb)
@@ -174,7 +184,7 @@ class Robot_Behaviour(Node):
 
     def central_shaft_feedback_cb(self, feedback_msg):
         feedback = feedback_msg.feedback
-        self.central_shaft_in_motion = feedback.in_motion
+        #self.central_shaft_in_motion = feedback.in_motion
 
 
     def human_input_callback(self, msg: Int32):
@@ -182,6 +192,7 @@ class Robot_Behaviour(Node):
 
     def update_last_hex_flag(self, msg: Int32):
         self.within_final_hex_transition = 1
+
 
     
 
@@ -199,13 +210,13 @@ class Robot_Behaviour(Node):
                 self.human_input_received = False
 
         elif self.robot_behaviour_state == ROBOT_STATE_INIT_ALL_UP:
-            # Brake motors
-            drive_msg = String()
-            drive_msg.data = "Stop"
-            self.drive_publisher.publish(drive_msg) # Assumed instantaneous change in wheel velocity
+            if not self.drive_speed_sent: # Brake motors
+                self.drive_speed_sent = True
+                drive_msg = String()
+                drive_msg.data = "Stop"
+                self.drive_publisher.publish(drive_msg) # Assumed instantaneous change in wheel velocity, no feedback necessary
             
             # Bring all flopper rails up
-            
             if not self.side_LI_motion_initiated:
                 self.side_LI_motion_initiated = True
                 self.send_side_LI_goal("up")
@@ -250,7 +261,6 @@ class Robot_Behaviour(Node):
                 self.central_shaft_motion_initiated = False
 
                 if self.central_shaft_reached_goal:
-                    self.central_shaft_reached_goal = False
                     self.robot_behaviour_state = ROBOT_STATE_INIT_OUTSIDE_RAILS_DOWN
                     self.get_logger().info("Central shaft in hole, ready to lower floppers") 
 
@@ -310,7 +320,14 @@ class Robot_Behaviour(Node):
                 speed_msg = String()
                 speed_msg.data = "low_speed"
                 self.drive_publisher.publish(speed_msg)
-            
+
+            if not self.flopper_localizer_state_sent:
+                self.flopper_localizer_state_sent = True
+                start_flopper_localization_msg = String()
+                start_flopper_localization_msg.data = "on"
+                self.flopper_localizer_publisher.publish(start_flopper_localization_msg)
+                self.get_logger().info('Flopper localizer state sent')
+
             if self.within_final_hex_transition:
                 speed_msg = String()
                 speed_msg.data = "stop"
@@ -319,24 +336,74 @@ class Robot_Behaviour(Node):
                 self.center_LI_motion_initiated = False
                 self.within_final_hex_transition = False
                 self.drive_speed_sent = False
-                self.robot_behaviour_state = ROBOT_STATE_LINEUP_CENTRAL_SHAFT
+                self.flopper_localizer_state_sent = False
+                self.robot_behaviour_state = ROBOT_STATE_LOWER_CENTRAL_SHAFT_TO_FARM
 
-                while 1: pass
+        elif self.robot_behaviour_state == DEBUG_CONVENVIENCE_STATE:
+
+            if not self.drive_speed_sent:
+                self.drive_speed_sent = True
+                speed_msg = String()
+                speed_msg.data = "stop"
+                self.drive_publisher.publish(speed_msg) 
+
+            if not self.central_shaft_motion_initiated:
+                self.central_shaft_motion_initiated = True
+                self.send_central_shaft_goal("above_wheels")
             
+            if self.central_shaft_reached_goal:
+                self.central_shaft_reached_goal = False
+                self.central_shaft_motion_initiated = False
+                self.robot_behaviour_state = ROBOT_STATE_LOWER_CENTRAL_SHAFT_TO_FARM
+                self.drive_speed_sent = False
+
+
+        elif self.robot_behaviour_state == ROBOT_STATE_LOWER_CENTRAL_SHAFT_TO_FARM:
+
+            if not self.drive_speed_sent:
+                self.drive_speed_sent = True
+                speed_msg = String()
+                speed_msg.data = "stop"
+                self.drive_publisher.publish(speed_msg) 
+
+            if not self.central_shaft_motion_initiated:
+                self.central_shaft_motion_initiated = True
+                self.send_central_shaft_goal("touching_farm")
+            
+            if self.central_shaft_reached_goal:
+                self.central_shaft_reached_goal = False
+                self.central_shaft_motion_initiated = False
+                self.robot_behaviour_state = ROBOT_STATE_LINEUP_CENTRAL_SHAFT
+                self.drive_speed_sent = False
 
         elif self.robot_behaviour_state == ROBOT_STATE_LINEUP_CENTRAL_SHAFT:
-            speed_msg = String()
-            speed_msg. data = "slow"
-            self.drive_publisher.publish(speed_msg) 
             
-            if self.within_hole_threshold: # Within 2mm of pivot hole
-                self.robot_behaviour_state = ROBOT_STATE_LINEUP_CENTRAL_SHAFT
+            if not self.drive_speed_sent:
+                self.drive_speed_sent = True
+                speed_msg = String()
+                speed_msg.data = "low_speed"
+                self.drive_publisher.publish(speed_msg) 
+
+            if not self.central_shaft_motion_initiated:
+                self.central_shaft_motion_initiated = True
+                self.send_central_shaft_goal("probing_for_hole")
+            
+            if self.central_shaft_reached_goal:
+                self.drive_speed_sent = False
+                self.robot_behaviour_state = ROBOT_STATE_STOP
+                self.central_shaft_reached_goal = False
+
+                
+
 
         elif self.robot_behaviour_state == ROBOT_STATE_STOP:
-            speed_msg = String()
-            speed_msg. data = "stop"
-            self.drive_publisher.publish(speed_msg)
-            self.robot_behaviour_state == ROBOT_STATE_STOP
+            if not self.drive_speed_sent:
+                self.drive_speed_sent = True
+                speed_msg = String()
+                speed_msg.data = "stop"
+                self.drive_publisher.publish(speed_msg)            
+
+                while 1: pass
 
         elif self.robot_behaviour_state == ROBOT_STATE_RETRACT_CENTRAL_FLOPPER_RAIL:
             moveDown = False
