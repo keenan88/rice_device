@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 from time import sleep
 
 in1 = 0
-in2 = 5
+in2 = 1
 right = 22
 center = 27
 left = 17

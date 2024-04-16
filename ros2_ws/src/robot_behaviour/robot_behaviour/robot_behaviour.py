@@ -8,6 +8,8 @@ from geometry_msgs.msg import Twist
 from li_interface.action import MoveLIAction
 from rclpy.action import ActionClient
 from time import sleep
+from std_srvs.srv import Trigger
+
 
 ROBOT_STATE_INIT_DO_NOTHING = Int32(data = 0)
 ROBOT_STATE_INIT_ALL_UP = Int32(data = 1)
@@ -43,20 +45,21 @@ class Robot_Behaviour(Node):
     def __init__(self, robot_behaviour = DEBUG_CONVENVIENCE_STATE):
         super().__init__('Robot_Behaviour')
         
-        self.robot_behaviour_state = robot_behaviour
-        self.last_state = self.robot_behaviour_state
-
-        self.behaviour_state_timer = self.create_timer(0.1, self.update_robot_state)
+        
 
         # Publishers to various subsystems
         self.drive_publisher = self.create_publisher(String, '/robot_movement', 10)
         self.robot_zeroer = self.create_publisher(Int32, '/zero_robot', 10)
 
-
+    
         # Action clients for flopper rails and central shaft
         self.side_li_action_client = ActionClient(self, MoveLIAction, 'move_side_lis')
         self.center_li_action_client = ActionClient(self, MoveLIAction, 'move_center_li')
         self.central_shaft_action_client = ActionClient(self, MoveLIAction, 'move_central_shaft')
+
+        self.toggle_action_client = ActionClient(self, MoveLIAction, 'toggle_drive')
+        self.toggle_action_sent = False
+        self.toggle_succeeded = False
         
         self.human_input_subscriber = self.create_subscription(
             Int32, '/human_input', self.human_input_callback, 10
@@ -68,6 +71,7 @@ class Robot_Behaviour(Node):
         
         # Locmotion states
         self.drive_speed_sent = False
+
 
         # States of flopper LAs
         self.center_LI_in_motion = False
@@ -90,7 +94,41 @@ class Robot_Behaviour(Node):
         self.within_turn_completion_threshold = False
         self.flopper_localizer_state_sent = False
 
+        # Start robot state LAST, after all services started
+        self.robot_behaviour_state = robot_behaviour
+        self.last_state = self.robot_behaviour_state
+        self.behaviour_state_timer = self.create_timer(0.1, self.update_robot_state)
+
+        self.get_logger().info('Robot behaviour initialization complete! Continuing...')
+
+    # Toggle action client
+    def send_toggle_action(self):
+        self.get_logger().info('Sending toggle action')
+        self.toggle_action_sent = True
+        self.toggle_succeeded = False
+        goal_msg = MoveLIAction.Goal()
+
+        self.toggle_action_client.wait_for_server()
+        self.toggle_goal_future = self.toggle_action_client.send_goal_async(goal_msg)
+        self.toggle_goal_future.add_done_callback(self.toggle_response_cb)
+
+    def toggle_response_cb(self, future):
+        goal_handle = future.result()
+        if not goal_handle.accepted:
+            self.get_logger().info('Toggle goal rejected')
+            self.toggle_action_sent = False
+            return
+
+        self.get_logger().info('Toggle goal accepted')
+        self.toggle_goal_future = goal_handle.get_result_async()
+        self.toggle_goal_future.add_done_callback(self.toggle_result_cb)
+
+    def toggle_result_cb(self, future):
+        result = future.result().result
+        self.get_logger().info('Toggle succeeded? {0}'.format(result.movement_time_completed))
+        self.toggle_succeeded = result.movement_time_completed
         
+
 
 
 
@@ -103,7 +141,7 @@ class Robot_Behaviour(Node):
 
         self.side_LI_in_motion = True
         self.side_li_action_client.wait_for_server()
-        self.send_goal_future = self.side_li_action_client.send_goal_async(goal_msg, feedback_callback = self.side_LI_feedback_cb)
+        self.send_goal_future = self.side_li_action_client.send_goal_async(goal_msg)
         self.send_goal_future.add_done_callback(self.side_LI_response_cb)
 
     def side_LI_response_cb(self, future):
@@ -121,10 +159,6 @@ class Robot_Behaviour(Node):
         self.get_logger().info('Side LA movement succeeded? {0}'.format(result.movement_time_completed))
         self.side_LI_in_motion = not result.movement_time_completed
 
-    def side_LI_feedback_cb(self, feedback_msg):
-        feedback = feedback_msg.feedback
-        self.side_LI_in_motion = feedback.in_motion
-
     # Center Flopper Rail Action Client
     def send_center_LI_goal(self, desired_pos, movement_time_s = 6):
         goal_msg = MoveLIAction.Goal()
@@ -133,7 +167,7 @@ class Robot_Behaviour(Node):
 
         self.center_LI_in_motion = True
         self.center_li_action_client.wait_for_server()
-        self.center_goal_future = self.center_li_action_client.send_goal_async(goal_msg, feedback_callback = self.center_LI_feedback_cb)
+        self.center_goal_future = self.center_li_action_client.send_goal_async(goal_msg)
         self.center_goal_future.add_done_callback(self.center_LI_response_cb)
 
     def center_LI_response_cb(self, future):
@@ -150,10 +184,6 @@ class Robot_Behaviour(Node):
         result = future.result().result
         self.get_logger().info('Center LA movement succeeded? {0}'.format(result.movement_time_completed))
         self.center_LI_in_motion = not result.movement_time_completed
-
-    def center_LI_feedback_cb(self, feedback_msg):
-        feedback = feedback_msg.feedback
-        self.center_LI_in_motion = feedback.in_motion
     
     # Central Shaft Action Client
     def send_central_shaft_goal(self, desired_pos):
@@ -163,7 +193,7 @@ class Robot_Behaviour(Node):
         self.central_shaft_in_motion = True
         self.central_shaft_reached_goal = False
         self.central_shaft_action_client.wait_for_server()
-        self.center_goal_future = self.central_shaft_action_client.send_goal_async(goal_msg, feedback_callback = self.central_shaft_feedback_cb)
+        self.center_goal_future = self.central_shaft_action_client.send_goal_async(goal_msg)
         self.center_goal_future.add_done_callback(self.central_shaft_response_cb)
 
     def central_shaft_response_cb(self, future):
@@ -181,10 +211,6 @@ class Robot_Behaviour(Node):
         self.get_logger().info('Central shaft movement succeeded? {0}'.format(result.movement_time_completed))
         self.central_shaft_in_motion = False
         self.central_shaft_reached_goal = result.movement_time_completed
-
-    def central_shaft_feedback_cb(self, feedback_msg):
-        feedback = feedback_msg.feedback
-        #self.central_shaft_in_motion = feedback.in_motion
 
 
     def human_input_callback(self, msg: Int32):
@@ -208,6 +234,25 @@ class Robot_Behaviour(Node):
             if self.human_input_received:
                 self.robot_behaviour_state = ROBOT_STATE_INIT_ALL_UP
                 self.human_input_received = False
+
+        elif self.robot_behaviour_state == DEBUG_CONVENVIENCE_STATE:
+            
+
+
+            """
+            if not self.toggle_action_sent:
+                self.send_toggle_action()
+
+            if self.toggle_succeeded:
+                self.toggle_action_sent = False
+                self.get_logger().info('Toggle succeeded')
+                while 1: pass
+            """
+    
+
+            
+           
+            
 
         elif self.robot_behaviour_state == ROBOT_STATE_INIT_ALL_UP:
             if not self.drive_speed_sent: # Brake motors
@@ -339,25 +384,6 @@ class Robot_Behaviour(Node):
                 self.flopper_localizer_state_sent = False
                 self.robot_behaviour_state = ROBOT_STATE_LOWER_CENTRAL_SHAFT_TO_FARM
 
-        elif self.robot_behaviour_state == DEBUG_CONVENVIENCE_STATE:
-
-            if not self.drive_speed_sent:
-                self.drive_speed_sent = True
-                speed_msg = String()
-                speed_msg.data = "stop"
-                self.drive_publisher.publish(speed_msg) 
-
-            if not self.central_shaft_motion_initiated:
-                self.central_shaft_motion_initiated = True
-                self.send_central_shaft_goal("above_wheels")
-            
-            if self.central_shaft_reached_goal:
-                self.central_shaft_reached_goal = False
-                self.central_shaft_motion_initiated = False
-                self.robot_behaviour_state = ROBOT_STATE_LOWER_CENTRAL_SHAFT_TO_FARM
-                self.drive_speed_sent = False
-
-
         elif self.robot_behaviour_state == ROBOT_STATE_LOWER_CENTRAL_SHAFT_TO_FARM:
 
             if not self.drive_speed_sent:
@@ -389,6 +415,8 @@ class Robot_Behaviour(Node):
                 self.send_central_shaft_goal("probing_for_hole")
             
             if self.central_shaft_reached_goal:
+                self.central_shaft_reached_goal = False
+                self.central_shaft_motion_initiated = False
                 self.drive_speed_sent = False
                 self.robot_behaviour_state = ROBOT_STATE_STOP
                 self.central_shaft_reached_goal = False
@@ -401,9 +429,17 @@ class Robot_Behaviour(Node):
                 self.drive_speed_sent = True
                 speed_msg = String()
                 speed_msg.data = "stop"
-                self.drive_publisher.publish(speed_msg)            
+                self.drive_publisher.publish(speed_msg)   
 
-                while 1: pass
+            if not self.central_shaft_motion_initiated:
+                self.central_shaft_motion_initiated = True
+                self.send_central_shaft_goal("in_hole")
+            
+            if self.central_shaft_reached_goal:
+                self.central_shaft_reached_goal = False
+                self.central_shaft_motion_initiated = False
+                self.robot_behaviour_state = ROBOT_STATE_LINEUP_CENTRAL_SHAFT
+                self.drive_speed_sent = False         
 
         elif self.robot_behaviour_state == ROBOT_STATE_RETRACT_CENTRAL_FLOPPER_RAIL:
             moveDown = False
@@ -435,6 +471,41 @@ class Robot_Behaviour(Node):
                 self.within_turn_completion_threshold = False
                 self.robot_behaviour_state = ROBOT_STATE_TURN_180
                 self.side_LI_reached_goal = False  
+
+        elif self.robot_behaviour_state == -1:
+
+            if not self.drive_speed_sent:
+                self.drive_speed_sent = True
+                speed_msg = String()
+                speed_msg.data = "stop"
+                self.drive_publisher.publish(speed_msg) 
+
+            if not self.central_shaft_motion_initiated:
+                self.central_shaft_motion_initiated = True
+                self.send_central_shaft_goal("in_hole")
+
+            # Bring all flopper rails up
+            if not self.side_LI_motion_initiated:
+                self.side_LI_motion_initiated = True
+                self.send_side_LI_goal("up")
+
+            if not self.center_LI_motion_initiated:
+                self.center_LI_motion_initiated = True
+                self.send_center_LI_goal("up")
+                            
+            if self.central_shaft_reached_goal:
+                if not self.side_LI_in_motion and not self.center_LI_in_motion:
+                    self.get_logger().info("Shaft extended floppers retracted, ready to turn")
+                    self.side_LI_motion_initiated = False
+                    self.center_LI_motion_initiated = False
+
+                    self.central_shaft_reached_goal = False
+                    self.central_shaft_motion_initiated = False
+                    self.drive_speed_sent = False
+
+                    self.robot_behaviour_state = ROBOT_STATE_TURN_180
+
+                    while 1: pass
 
         elif self.robot_behaviour_state == ROBOT_STATE_TURN_180:
             drive_msg = String()

@@ -40,7 +40,7 @@ from rclpy.node import Node
 from rclpy.qos import QoSProfile
 from sensor_msgs.msg import Imu, MagneticField, Temperature
 from std_msgs.msg import String
-from example_interfaces.srv import Trigger
+from std_srvs.srv import Trigger
 import tf2_ros
 import geometry_msgs.msg
 

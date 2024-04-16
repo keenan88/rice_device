@@ -65,7 +65,7 @@ class LinearActuator(Node):
 
     def side_las_callback(self, goal_handle):
         #self.get_logger().info('Executing side goal...')
-#asdf
+        
         # Start movement
         self.rightLA.ChangeDutyCycle(self.dutyCycle)
         self.leftLA.ChangeDutyCycle(self.dutyCycle)

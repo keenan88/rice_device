@@ -56,7 +56,7 @@ try:
     while 1:
         if but.is_pressed:
             print("Button was pushed!")
-        print(pot.value)
+        # print(pot.value)
         if isData():
             c = sys.stdin.read(1)
             # print(c)

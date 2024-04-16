@@ -28,6 +28,11 @@ def generate_launch_description():
             executable = 'flopper_localization_exe'
         ),
 
+        Node(
+            package='bno055',
+            executable = 'bno055'
+        ),
+
 
 
     ])

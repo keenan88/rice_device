@@ -5,7 +5,10 @@ from geometry_msgs.msg import Twist
 from math import pi
 import sys
 from nav_msgs.msg import Odometry
-
+from std_srvs.srv import Trigger
+from time import sleep
+from li_interface.action import MoveLIAction # Scuff.
+from rclpy.action import ActionServer
 
 class Locomotion(Node):
 
@@ -16,6 +19,7 @@ class Locomotion(Node):
 
         self.high_speed_m_per_s = 0.125
         self.low_speed_m_per_s = 0.01
+        self.toggle_ang_vel = 0.1
 
         self.turning_speed_rad_per_s = 2 * 3.1415 / 10
 
@@ -24,6 +28,46 @@ class Locomotion(Node):
         )
 
         self.robot_speed_publisher = self.create_publisher(Twist, '/cmd_vel', 10)
+
+        self.toggle_motion_time_s = 0.1
+
+        self.toggle_action_server = ActionServer(
+            self,
+            MoveLIAction,
+            'toggle_drive',
+            self.toggle_callback
+        )
+
+    def toggle_callback(self, goal_handle):
+        self.get_logger().info('Executing toggle callback...')
+
+        # Start movement
+        stop_movement = String()
+        stop_movement.data = "stop"
+        self.set_robot_velocity(stop_movement)
+
+        toggle_states = ['CW_toggle', 'CCW_toggle', 'CW_toggle', 'CCW_toggle']
+
+        toggle_state_idx = 0
+
+        while toggle_state_idx < len(toggle_states):
+            vel_str = String()
+            vel_str.data = toggle_states[toggle_state_idx]
+            self.set_robot_velocity(vel_str)
+
+            sleep(self.toggle_motion_time_s)
+            toggle_state_idx += 1
+        
+        self.set_robot_velocity(stop_movement)
+
+        result = MoveLIAction.Result()
+
+        result.movement_time_completed = True
+        goal_handle.succeed()
+        
+        return result
+
+        
 
     def set_robot_velocity(self, vel_str: String):
 
@@ -40,6 +84,12 @@ class Locomotion(Node):
 
             elif vel_str.data == "turn":
                 robot_vel.angular.z = self.turning_speed_rad_per_s
+
+            elif vel_str.data == "CW_toggle":
+                robot_vel.angular.z = self.toggle_ang_vel
+
+            elif vel_str.data == "CCW_toggle":
+                robot_vel.angular.z = -self.toggle_ang_vel
                 
             else:
                 pass
@@ -52,6 +102,18 @@ class Locomotion(Node):
 
             self.robot_speed_publisher.publish(robot_vel)
 
+    def toggle_cb(self, request, response):
+        
+        
+
+        response.success = True
+        response.message = "Toggled Drive"
+
+        print("Done, returning: ", response)
+
+        return response
+
+        
         
 
     
