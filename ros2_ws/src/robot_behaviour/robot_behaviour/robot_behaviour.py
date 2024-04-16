@@ -42,7 +42,7 @@ ROBOT_STATE_EXTEND_CENTRAL_FLOPPER_RAIL = Int32(data = 15)
 
 
 class Robot_Behaviour(Node):
-    def __init__(self, robot_behaviour = DEBUG_CONVENVIENCE_STATE):
+    def __init__(self, robot_behaviour = ROBOT_STATE_INIT_OUTSIDE_RAILS_DOWN):
         super().__init__('Robot_Behaviour')
         
         
@@ -98,6 +98,8 @@ class Robot_Behaviour(Node):
         self.robot_behaviour_state = robot_behaviour
         self.last_state = self.robot_behaviour_state
         self.behaviour_state_timer = self.create_timer(0.1, self.update_robot_state)
+
+        sleep(2)
 
         self.get_logger().info('Robot behaviour initialization complete! Continuing...')
 
@@ -236,19 +238,15 @@ class Robot_Behaviour(Node):
                 self.human_input_received = False
 
         elif self.robot_behaviour_state == DEBUG_CONVENVIENCE_STATE:
-            
 
+            if not self.drive_speed_sent:
 
-            """
-            if not self.toggle_action_sent:
-                self.send_toggle_action()
+                self.drive_speed_sent = True
+                speed_msg = String()
+                speed_msg.data = "full_speed"
+                self.drive_publisher.publish(speed_msg)
 
-            if self.toggle_succeeded:
-                self.toggle_action_sent = False
-                self.get_logger().info('Toggle succeeded')
-                while 1: pass
-            """
-    
+                print("sent speed")
 
             
            
@@ -363,7 +361,7 @@ class Robot_Behaviour(Node):
                 self.get_logger().info('Drive speed sent')
                 self.drive_speed_sent = True
                 speed_msg = String()
-                speed_msg.data = "low_speed"
+                speed_msg.data = "full_speed"
                 self.drive_publisher.publish(speed_msg)
 
             if not self.flopper_localizer_state_sent:

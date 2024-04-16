@@ -103,7 +103,7 @@ class CentralShaft(Node):
                 if duty_cycle < 10: duty_cycle = 10 #lower saturation
                 self.la.ChangeDutyCycle(duty_cycle)
 
-                self.get_logger().info('%d, %d, %d, %d %f' % (pot_val, targetPos, abs_err, btn_val, duty_cycle))
+                #self.get_logger().info('%d, %d, %d, %d %f' % (pot_val, targetPos, abs_err, btn_val, duty_cycle))
 
                 # Necessary to keep direction in loop, in case of overshoot
                 # Configure hardware to move central shaft in desired direction
@@ -153,7 +153,7 @@ class CentralShaft(Node):
                 
                 #abs_err = abs(pot_val - targetPos)
 
-                self.get_logger().info('%d, %d, %d' % (pot_val, targetPos, btn_val))
+                #self.get_logger().info('%d, %d, %d' % (pot_val, targetPos, btn_val))
 
                 if moving_down:
                     if pot_val < self.max_extension and not btn_val:
